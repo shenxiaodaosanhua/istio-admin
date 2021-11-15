@@ -63,13 +63,19 @@ export const constantRoutes = [
     children: [
       {
         path: '/istio/vs/index',
-        name: '虚拟服务',
+        name: 'vs-index',
         component: () => import('@/views/istio/vs/index'),
         meta: { title: '虚拟服务', icon: 'table' }
       },
       {
+        path: '/istio/vs/create',
+        name: 'vs-create',
+        component: () => import('@/views/istio/vs/index'),
+        meta: { title: '创建虚拟服务', icon: 'table' }
+      },
+      {
         path: '/istio/gw/index',
-        name: '网关',
+        name: 'gw-index',
         component: () => import('@/views/istio/gw/index'),
         meta: { title: '网关服务', icon: 'table' }
       }

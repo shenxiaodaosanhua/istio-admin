@@ -61,6 +61,7 @@
 <script>
 import { getNsAll } from '@/api/ns'
 import { getVsByNs } from '@/api/vs'
+import { NewClient } from '@/utils/ws'
 
 export default {
   data() {
@@ -68,13 +69,24 @@ export default {
       vsData: [],
       namespaceData: [],
       defaultValue: '',
-      nsData: []
+      nsData: [],
+      wsClient: null
     }
   },
   created() {
     getNsAll().then(res => {
       this.namespaceData = res.data
     })
+    this.wsClient = NewClient()
+    this.wsClient.onmessage = (e) => {
+      if (e.data !== 'ping') {
+        const result = JSON.parse(e.data)
+        if (result.type === 'vs' && result.result.ns === this.defaultValue) {
+          this.nsData = result.result.data
+          this.$forceUpdate()
+        }
+      }
+    }
   },
   methods: {
     getVsByNs() {

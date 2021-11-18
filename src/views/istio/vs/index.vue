@@ -48,9 +48,15 @@
         <el-table-column
           label="操作"
         >
-          <template>
-            <el-button type="text" size="small">查看</el-button>
+          <template slot-scope="scope">
+            <el-button type="text" size="small">
+              <router-link
+                :to="{name:'vs-detail', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
+              >查看
+              </router-link>
+            </el-button>
             <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="deleteVs(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +66,7 @@
 
 <script>
 import { getNsAll } from '@/api/ns'
-import { getVsByNs } from '@/api/vs'
+import { deleteVs, getVsByNs } from '@/api/vs'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -68,7 +74,7 @@ export default {
     return {
       vsData: [],
       namespaceData: [],
-      defaultValue: '',
+      defaultValue: 'myistio',
       nsData: [],
       wsClient: null
     }
@@ -76,6 +82,10 @@ export default {
   created() {
     getNsAll().then(res => {
       this.namespaceData = res.data
+    })
+    getVsByNs(this.defaultValue).then(res => {
+      this.nsData = res.data
+      this.$forceUpdate()
     })
     this.wsClient = NewClient()
     this.wsClient.onmessage = (e) => {
@@ -93,6 +103,30 @@ export default {
       getVsByNs(this.defaultValue).then(res => {
         this.nsData = res.data
         this.$forceUpdate()
+      })
+    },
+    deleteVs(row) {
+      this.$confirm('确认删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteVs({
+          ns: row.metadata.namespace,
+          name: row.metadata.name
+        }).then(res => {
+          if (res.data === 'ok') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

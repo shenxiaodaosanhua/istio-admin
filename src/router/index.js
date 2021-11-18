@@ -70,8 +70,16 @@ export const constantRoutes = [
       {
         path: '/istio/vs/create',
         name: 'vs-create',
+        hidden: true,
         component: () => import('@/views/istio/vs/index'),
         meta: { title: '创建虚拟服务', icon: 'table' }
+      },
+      {
+        path: '/istio/vs/detail',
+        name: 'vs-detail',
+        hidden: true,
+        component: () => import('@/views/istio/vs/detail'),
+        meta: { title: '虚拟服务详情', icon: 'table' }
       },
       {
         path: '/istio/gw/index',

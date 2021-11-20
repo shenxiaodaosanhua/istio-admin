@@ -18,18 +18,6 @@
           >{{ host }}</el-tag>
         </el-descriptions-item>
       </el-descriptions>
-      <el-table
-        :data="httpRule"
-        border
-        fit
-        highlight-current-row
-      >
-        <el-table-column align="center" label="序号">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-      </el-table>
     </el-container>
   </el-main>
 </template>
@@ -50,6 +38,7 @@ export default {
       this.metadata = res.data.metadata
       this.spec = res.data.spec
       this.httpRule = res.data.spec.http
+      this.$forceUpdate()
     })
   },
   methods: {

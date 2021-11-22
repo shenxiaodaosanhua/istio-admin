@@ -86,6 +86,13 @@ export const constantRoutes = [
         name: 'gw-index',
         component: () => import('@/views/istio/gw/index'),
         meta: { title: '网关服务', icon: 'table' }
+      },
+      {
+        path: '/istio/gw/create',
+        name: 'gw-create',
+        hidden: true,
+        component: () => import('@/views/istio/gw/create'),
+        meta: { title: '创建网关', icon: 'table' }
       }
     ]
   },

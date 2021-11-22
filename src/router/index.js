@@ -55,6 +55,19 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/ingress',
+    component: Layout,
+    redirect: '/ingress/index',
+    name: 'ingress管理',
+    meta: { title: 'ingress管理', icon: 'el-icon-s-help' },
+    children: [{
+      path: '/ingress/index',
+      name: 'ingress-index',
+      component: () => import('@/views/ingress/index'),
+      meta: { title: 'ingress列表', icon: 'el-icon-s-help' }
+    }]
+  },
+  {
     path: '/Istio管理',
     component: Layout,
     redirect: '/istio/vs/index',

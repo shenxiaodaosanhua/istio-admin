@@ -6,3 +6,10 @@ export function getIngressByNs(ns) {
     method: 'get'
   })
 }
+
+export function getIngressInfo(ns, name) {
+  return request({
+    url: '/v1/ingress/' + ns + '/' + name,
+    method: 'get'
+  })
+}

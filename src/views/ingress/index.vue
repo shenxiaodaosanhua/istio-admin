@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <el-button type="text" size="small">
               <router-link
-                :to="{name:'gw-create', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
+                :to="{name:'ingress-detail', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
               >查看
               </router-link>
             </el-button>

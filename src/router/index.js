@@ -60,12 +60,21 @@ export const constantRoutes = [
     redirect: '/ingress/index',
     name: 'ingress管理',
     meta: { title: 'ingress管理', icon: 'el-icon-s-help' },
-    children: [{
-      path: '/ingress/index',
-      name: 'ingress-index',
-      component: () => import('@/views/ingress/index'),
-      meta: { title: 'ingress列表', icon: 'el-icon-s-help' }
-    }]
+    children: [
+      {
+        path: '/ingress/index',
+        name: 'ingress-index',
+        component: () => import('@/views/ingress/index'),
+        meta: { title: 'ingress列表', icon: 'el-icon-s-help' }
+      },
+      {
+        path: '/ingress/detail',
+        name: 'ingress-detail',
+        hidden: true,
+        component: () => import('@/views/ingress/detail'),
+        meta: { title: 'ingress详情', icon: 'el-icon-s-help' }
+      }
+    ]
   },
   {
     path: '/Istio管理',

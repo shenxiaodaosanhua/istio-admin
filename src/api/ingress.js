@@ -13,3 +13,11 @@ export function getIngressInfo(ns, name) {
     method: 'get'
   })
 }
+
+export function deleteIngress(data) {
+  return request({
+    url: '/v1/ingress',
+    method: 'delete',
+    data: data
+  })
+}

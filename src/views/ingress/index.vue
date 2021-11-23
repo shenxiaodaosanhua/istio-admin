@@ -66,7 +66,7 @@
 
 <script>
 import { getNsAll } from '@/api/ns'
-import { getIngressByNs } from '@/api/ingress'
+import { deleteIngress, getIngressByNs } from '@/api/ingress'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -103,7 +103,14 @@ export default {
       })
     },
     deleteIngress(row) {
-      console.log(row)
+      deleteIngress({
+        namespace: row.metadata.namespace,
+        name: row.metadata.name
+      }).then(res => {
+        if (res.data === 'ok') {
+          this.$message.success('删除成功')
+        }
+      })
     }
   }
 }

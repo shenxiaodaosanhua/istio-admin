@@ -7,6 +7,14 @@ export function getVsByNs(ns) {
   })
 }
 
+export function createVs(data) {
+  return request({
+    url: '/v1/vs',
+    method: 'post',
+    data: data
+  })
+}
+
 export function deleteVs(data) {
   return request({
     url: '/v1/vs',

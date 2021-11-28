@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'vs-create'}">新增配置</router-link>
+          <router-link :to="{name: 'vs-create'}">新增虚拟服务</router-link>
         </el-col>
       </el-row>
     </el-header>

@@ -93,7 +93,7 @@ export const constantRoutes = [
         path: '/istio/vs/create',
         name: 'vs-create',
         hidden: true,
-        component: () => import('@/views/istio/vs/index'),
+        component: () => import('@/views/istio/vs/create'),
         meta: { title: '创建虚拟服务', icon: 'table' }
       },
       {

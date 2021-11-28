@@ -15,6 +15,14 @@ export function createVs(data) {
   })
 }
 
+export function updateVs(data) {
+  return request({
+    url: '/v1/vs?update=1',
+    method: 'post',
+    data: data
+  })
+}
+
 export function deleteVs(data) {
   return request({
     url: '/v1/vs',

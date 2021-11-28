@@ -6,11 +6,10 @@
       </div>
       <el-form :inline="true">
         <el-form-item label="名称">
-          <el-input v-model="metadata.name" placeholder="虚拟服务名称" />
+          <el-input v-model="metadata.name" :disabled="isUpdate" placeholder="虚拟服务名称" />
         </el-form-item>
         <el-form-item label="命名空间">
-          <!--<el-input v-model="namespace"  placeholder="如default"></el-input>-->
-          <el-select v-model="metadata.namespace" placeholder="请选择命名空间" @change="getVsByNs">
+          <el-select v-model="metadata.namespace" placeholder="请选择命名空间">
             <el-option
               v-for="item in namespaceData"
               :key="item.name"
@@ -28,23 +27,21 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <Hosts :hosts="spec.hosts" />
-    <HttpConfig :http="spec.http" />
-
+    <Hosts ref="hostsConfig" />
+    <HttpConfig ref="httpConfig" />
     <div>
       <json-viewer :value="spec" :expand-depth="8" copyable sort />
     </div>
     <div style="margin-top: 20px;text-align: center">
       <el-button type="primary" @click="saveVs">
-        保存
-      </el-button>
+        保存</el-button>
     </div>
 
   </div>
 </template>
 <script>
 import { getNsAll } from '@/api/ns'
-import { createVs } from '@/api/vs'
+import { createVs, getVsByNsAndName, updateVs } from '@/api/vs'
 
 export default {
   components: {
@@ -56,27 +53,43 @@ export default {
       metadata: { name: '', namespace: 'default' },
       spec: { hosts: [], http: [] }, // vs的spec对象
       namespaceData: [], // ns列表
-      tips: true // 是否打开教学
+      tips: false, // 是否打开教学
+      isUpdate: false
     }
   },
   created() {
     getNsAll().then(rsp => {
       this.namespaceData = rsp.data
+      // 代表是修改
+      if (this.$route.params.ns !== undefined && this.$route.params.name !== undefined) {
+        this.metadata.name = this.$route.params.name
+        this.metadata.namespace = this.$route.params.ns
+        const { namespace, name } = this.metadata
+        getVsByNsAndName(namespace, name).then(rsp => {
+          this.spec = rsp.data.spec
+          this.$refs.httpConfig.setObject(this.spec.http)
+          this.$refs.hostsConfig.setObject(this.spec.hosts)
+
+          this.isUpdate = true
+        })
+      }
     })
   },
   methods: {
+    updateObject(propName, v) {
+      this.spec[propName] = Object.assign([], v)
+    },
     saveVs() {
-      createVs({
+      let operatorFunc = createVs
+      if (this.isUpdate) { operatorFunc = updateVs }
+      operatorFunc({
         metadata: this.metadata,
         spec: this.spec
-      }).then(res => {
-        if (res.data === 'ok') {
-          this.$message.success('保存成功')
+      }).then(rsp => {
+        if (rsp.data === 'ok') {
+          this.$message.success('操作成功')
         }
       })
-    },
-    getVsByNs() {
-      console.log(111)
     }
   }
 }

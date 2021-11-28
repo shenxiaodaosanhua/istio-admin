@@ -55,7 +55,20 @@
               >查看
               </router-link>
             </el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button
+              type="text"
+              size="small"
+            >
+              <router-link
+                :to="{
+                  name:'vs-create',params:{
+                    ns:scope.row.metadata.namespace,
+                    name:scope.row.metadata.name
+                  }
+                }"
+              >编辑
+              </router-link>
+            </el-button>
             <el-button type="text" size="small" @click="deleteVs(scope.row)">删除</el-button>
           </template>
         </el-table-column>

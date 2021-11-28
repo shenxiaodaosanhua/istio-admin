@@ -8,7 +8,7 @@
         tips:基于HTTP/HTTP2/GRPC的路由配置
       </div>
       <div>
-        <el-form v-for="(httpcfg,rootindex) in $props.http" :inline="true" style="margin-top: 10px">
+        <el-form v-for="(httpcfg,rootindex) in childHttp" :inline="true" style="margin-top: 10px">
           <el-form-item label="http配置名称" style="color: green!important;font-weight: bold">
             <el-input v-model="httpcfg.name" placeholder="填写name" style="width: 150px" />
             <el-button type="primary" style="margin-left: 20px" @click="rmHttp(rootindex)">
@@ -66,7 +66,7 @@
                 </el-form-item>
 
                 <!--route   headers  .头操作。对应-->
-                <el-form-item label="头操作" style="padding-left:20px">
+                <el-form-item label="头操作" style="padding-left:20px;width:100%;display: block">
                   <el-form-item style="display: block;width: 100%;margin:5px auto">
                     <i class="ii el-icon-circle-plus" @click="addEmptyRouteHeader(rootindex,routeindex)" />
 
@@ -117,33 +117,45 @@ const emptyHttp = { // 先写这么多
 }
 // 拷贝对象
 function copyObject(obj) {
-  const str = JSON.stringify(obj)
+  var str = JSON.stringify(obj)
   return JSON.parse(str)
 }
 export default {
   props: {
-    http: {
-      type: Array,
+    spec: {
+      type: Object,
       default() {
-        return []
+        return {}
       }
     }
   },
   data() {
     return {
+      childHttp: []
 
     }
+  },
+  watch: {
+    childHttp: {
+      handler: function(newVal, oldVal) {
+        this.$parent.updateObject('http', newVal)
+      }
+
+    }
+  },
+  updated() {
+
   },
   methods: {
     // 专门封装一个函数 ,可以用来取出match列表或单个match对象
     getMatch(rootindex, matchindex, islist) {
-      for (let i = 0; i < this.$props.http.length; i++) {
+      for (var i = 0; i < this.childHttp.length; i++) {
         if (i === rootindex) {
-          const matchList = this.$props.http[i].match
+          var matchList = this.childHttp[i].match
           if (islist) { // 要的是列表 还是 单个
             return matchList
           }
-          for (let j = 0; j < matchList.length; j++) {
+          for (var j = 0; j < matchList.length; j++) {
             if (j === matchindex) {
               return matchList[matchindex]
             }
@@ -154,13 +166,13 @@ export default {
     },
     // 专门封装一个函数 ,可以用来取出route列表或单个route对象
     getRoute(rootindex, routeindex, islist) {
-      for (let i = 0; i < this.$props.http.length; i++) {
+      for (var i = 0; i < this.childHttp.length; i++) {
         if (i === rootindex) {
-          const getList = this.$props.http[i].route
+          var getList = this.childHttp[i].route
           if (islist) { // 要的是列表 还是 单个
             return getList
           }
-          for (let j = 0; j < getList.length; j++) {
+          for (var j = 0; j < getList.length; j++) {
             if (j === routeindex) {
               return getList[routeindex]
             }
@@ -180,18 +192,26 @@ export default {
     },
     // 添加 Route对象的头操作部分
     addEmptyRouteHeader(rootindex, routeindex) {
-      const route = this.getRoute(rootindex, routeindex, false)
-      if (route !== null) {
-        route._headers.push({ type: '', mod: '', key: '', value: '' })
+      const routeList = this.getRoute(rootindex, 0, true)
+      if (routeList === undefined || routeList === null) {
+        this.$set(this.childHttp[rootindex], 'route', [copyObject(emptyRoute)])
+      } else {
+        if (routeList[routeindex]._headers === undefined) {
+          this.$set(routeList[routeindex], '_headers', [{ type: '', mod: '', key: '', value: '' }])
+        } else {
+          routeList[routeindex]._headers.push({ type: '', mod: '', key: '', value: '' })
+        }
       }
     },
     addRoute(rootindex) {
-      const routeList = this.$props.http[rootindex].route
+      var routeList = this.childHttp[rootindex].route
       routeList.push(copyObject(emptyRoute))
     },
     addMatch(rootindex) {
       const matchList = this.getMatch(rootindex, 0, true)
-      if (matchList !== null) {
+      if (matchList === undefined || matchList === null) { // 编辑的时候可能 没有值，那我们就构建一个
+        this.$set(this.childHttp[rootindex], 'match', [copyObject(emptyMatch)])
+      } else {
         matchList.unshift(copyObject(emptyMatch))
       }
     },
@@ -211,7 +231,7 @@ export default {
     rmRouteHeader(rootindex, routeindex, headerindex) {
       const route = this.getRoute(rootindex, routeindex, false)
       if (route !== null) {
-        for (let i = 0; i < route._headers.length; i++) {
+        for (var i = 0; i < route._headers.length; i++) {
           if (headerindex === i) {
             route._headers.splice(headerindex, 1)
             this.checkRouteHeader(rootindex, routeindex, headerindex)
@@ -220,44 +240,105 @@ export default {
         }
       }
     },
-    checkRouteHeader(rootindex, routeindex) {
+    checkRouteHeader(rootindex, routeindex, headerindex) {
       const route = this.getRoute(rootindex, routeindex, false)
-      if (route !== null) {
-        // 先清空 router.headers
-        route.headers = {}
-        const pushObject = {}
-        for (let i = 0; i < route._headers.length; i++) {
-          const h = route._headers[i]
-          if (h.key === '' || h.type === '' || h.mod === '') {
-            continue
+      if (route === null) {
+        alert('没有找到路由')
+        return
+      }
+      // 先清空 router.headers
+      this.$set(route, 'headers', {})
+
+      var pushObject = {}
+      for (var i = 0; i < route._headers.length; i++) {
+        var h = route._headers[i]
+        if (h.key === '' || h.type === '' || h.mod === '') {
+          continue
+        }
+        if (h.mod === 'remove') { // 删除操作  只需要处理key
+          if (h.type in pushObject && h.mod in pushObject[h.type]) { // 如果已经存在了，则要修改，否则就是添加
+            var rmList = pushObject[h.type][h.mod]
+            rmList.push(h.key)
+          } else {
+            pushObject[h.type] = {}
+            pushObject[h.type][h.mod] = [h.key]
           }
-          if (h.mod === 'remove') { // 删除操作  只需要处理key
-            if (h.type in pushObject && h.mod in pushObject[h.type]) { // 如果已经存在了，则要修改，否则就是添加
-              const rmList = pushObject[h.type][h.mod]
-              rmList.push(h.key)
-            } else {
-              pushObject[h.type] = {}
-              pushObject[h.type][h.mod] = [h.key]
-            }
-          } else { // add 和set处理模式一样
-            if (h.type in pushObject && h.mod in pushObject[h.type]) { // 如果已经存在了，则要修改，否则就是添加
-              const op = pushObject[h.type][h.mod]
-              op[h.key] = h.value
-            } else {
-              pushObject[h.type] = {}
-              pushObject[h.type][h.mod] = {}
-              pushObject[h.type][h.mod][h.key] = h.value
+        } else { // add 和set处理模式一样
+          if (h.type in pushObject && h.mod in pushObject[h.type]) { // 如果已经存在了，则要修改，否则就是添加
+            var op = pushObject[h.type][h.mod]
+            op[h.key] = h.value
+          } else {
+            pushObject[h.type] = {}
+            pushObject[h.type][h.mod] = {}
+            pushObject[h.type][h.mod][h.key] = h.value
+          }
+        }
+      }
+      route.headers = pushObject
+    },
+    addHttp() {
+      this.childHttp.push(copyObject(emptyHttp))
+    },
+    rmHttp(index) {
+      this.childHttp.splice(index, 1)
+    },
+    parseRouteHeaders() {
+      // 把 route 里面的headers 转换成_headers  --- 如果有的话
+      for (var rootindex = 0; rootindex < this.childHttp.length; rootindex++) {
+        const http = this.childHttp[rootindex]
+        if (http.route === undefined) return
+        for (var routeindex = 0; routeindex < http.route.length; routeindex++) {
+          const route = http.route[routeindex]
+
+          if (route.headers !== undefined) {
+            this.$set(route, '_headers', [])// 先清空
+            for (var key in route.headers) { // 遍历属性
+              var pushObject = { type: '', mod: '', key: '', value: '' } // {type:'',mod:'',key:'',value:''}
+              pushObject.type = key
+              for (var subkey in route.headers[key]) { // 只取一个 ,所以遍历一次就可以break
+                pushObject.mod = subkey
+                if (subkey === 'remove') { // 删除要做特殊处理
+                  pushObject.key = route.headers[key][subkey][0] // remove是一个数组 ，
+                } else {
+                  for (var sub_subkey in route.headers[key][subkey]) {
+                    pushObject.key = sub_subkey
+                    pushObject.value = route.headers[key][subkey][sub_subkey]
+                  }
+                }
+              }
+
+              route._headers.push(pushObject)
             }
           }
         }
-        route.headers = pushObject
       }
     },
-    addHttp() {
-      this.$props.http.push(copyObject(emptyHttp))
+    parseRouteMatch() {
+      for (var rootindex = 0; rootindex < this.childHttp.length; rootindex++) {
+        const http = this.childHttp[rootindex]
+        if (http.match === undefined) return // 如果本身就没match 则不做任何处理
+        // {name:'',uri:{},_uri:{key:'exact',value:''}}
+        for (var matchindex = 0; matchindex < http.match.length; matchindex++) {
+          var match = http.match[matchindex] // 读取match
+          if (match.name === undefined) { this.$set(match, 'name', '') }
+          var _uriObject = { key: 'exact', value: '' }
+          // 先清空
+          for (var key in match.uri) { // 遍历uri属性
+            _uriObject.key = key
+            _uriObject.value = match.uri[key]
+          }
+          this.$set(match, '_uri', _uriObject)
+        }
+      }
     },
-    rmHttp(index) {
-      this.$props.http.splice(index, 1)
+    setObject(v) {
+      if (v === undefined) {
+        this.childHttp = []
+        return
+      }
+      this.childHttp = copyObject(v)
+      this.parseRouteHeaders()// 反解route里面的headers ---->  _headers
+      this.parseRouteMatch() // 反解 http里的match
     },
     // 保留函数
     genOutput() {
@@ -268,5 +349,6 @@ export default {
 }
 </script>
 <style>
+.el-form-item__content{line-height: normal}
 .ii{cursor:pointer}
 </style>

@@ -7,6 +7,13 @@ export function getGwByNs(ns) {
   })
 }
 
+export function getGwDetailByNsAndName(ns, name) {
+  return request({
+    url: '/v1/gw/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
 export function deleteGw(data) {
   return request({
     url: '/v1/gw',

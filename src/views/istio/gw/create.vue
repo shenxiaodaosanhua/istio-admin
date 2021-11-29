@@ -82,6 +82,9 @@
       </el-form>
     </el-card>
     <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+    <div>
+      <json-viewer :value="form" :expand-depth="8" copyable sort />
+    </div>
   </el-main>
 </template>
 
@@ -95,6 +98,7 @@ export default {
       form: {
         metadata: {},
         spec: {
+          selector: {},
           servers: [
             {
               port: {

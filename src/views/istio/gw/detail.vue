@@ -12,10 +12,10 @@
           label="标签"
         >
           <el-tag
-            v-for="item in spec.selector"
+            v-for="(item, index) in spec.selector"
             :key="item"
             size="small"
-          >{{ item }}</el-tag>
+          >{{ index + '=' +item }}</el-tag>
         </el-descriptions-item>
       </el-descriptions>
     </el-container>

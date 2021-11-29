@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'vs-create'}">新增网关</router-link>
+          <router-link :to="{name: 'gw-create'}">新增网关</router-link>
         </el-col>
       </el-row>
     </el-header>

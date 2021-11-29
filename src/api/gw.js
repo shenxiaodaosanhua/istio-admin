@@ -7,6 +7,14 @@ export function getGwByNs(ns) {
   })
 }
 
+export function createGw(data) {
+  return request({
+    url: '/v1/gw',
+    method: 'post',
+    data: data
+  })
+}
+
 export function getGwDetailByNsAndName(ns, name) {
   return request({
     url: '/v1/gw/' + ns + '/' + name,

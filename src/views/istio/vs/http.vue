@@ -8,7 +8,7 @@
         tips:基于HTTP/HTTP2/GRPC的路由配置
       </div>
       <div>
-        <el-form v-for="(httpcfg,rootindex) in childHttp" :inline="true" style="margin-top: 10px">
+        <el-form v-for="(httpcfg,rootindex) in childHttp" :key="rootindex" :inline="true" style="margin-top: 10px">
           <el-form-item label="http配置名称" style="color: green!important;font-weight: bold">
             <el-input v-model="httpcfg.name" placeholder="填写name" style="width: 150px" />
             <el-button type="primary" style="margin-left: 20px" @click="rmHttp(rootindex)">
@@ -18,7 +18,12 @@
               <div style="text-align:right;width:100%;display: block">
                 <i class="ii el-icon-circle-plus" @click="addMatch(rootindex)" />
               </div>
-              <el-form v-for="(match,matchindex) in httpcfg.match" :inline="false" style="margin-top: 10px">
+              <el-form
+                v-for="(match,matchindex) in httpcfg.match"
+                :key="matchindex"
+                :inline="false"
+                style="margin-top: 10px"
+              >
                 <el-form-item>
                   <i class="ii el-icon-remove-outline" @click="rmMatch(rootindex,matchindex)" />
                 </el-form-item>
@@ -26,12 +31,21 @@
                   <el-input v-model="match.name" placeholder="填写match name" />
                 </el-form-item>
                 <el-form-item label="uri匹配">
-                  <el-select v-model="match._uri.key" style="width: 100px" @change="()=>changeUri(rootindex,matchindex)">
+                  <el-select
+                    v-model="match._uri.key"
+                    style="width: 100px"
+                    @change="()=>changeUri(rootindex,matchindex)"
+                  >
                     <el-option value="exact" label="精确匹配" />
                     <el-option value="prefix" label="前缀匹配" />
                     <el-option value="regex" label="regex正则匹配" />
                   </el-select>
-                  <el-input v-model="match._uri.value" placeholder="如填写：/users/v2/" style="width: 150px;margin-left:10px" @change="changeUri(rootindex,matchindex)" />
+                  <el-input
+                    v-model="match._uri.value"
+                    placeholder="如填写：/users/v2/"
+                    style="width: 150px;margin-left:10px"
+                    @change="changeUri(rootindex,matchindex)"
+                  />
                 </el-form-item>
 
               </el-form>
@@ -41,7 +55,11 @@
               <div style="text-align:right;width:100%;display: block">
                 <i class="ii el-icon-circle-plus" @click="addRoute(rootindex)" />
               </div>
-              <el-form v-for="(routeconfig,routeindex) in httpcfg.route" style="margin-top: 10px;padding-top:10px;border-top:dashed 1px #ddd">
+              <el-form
+                v-for="(routeconfig,routeindex) in httpcfg.route"
+                :key="routeindex"
+                style="margin-top: 10px;padding-top:10px;border-top:dashed 1px #ddd"
+              >
                 <!-- 删除该 route-->
                 <el-form-item>
                   <i class="ii el-icon-remove-outline" @click="rmRoute(rootindex,routeindex)" />
@@ -71,28 +89,56 @@
                     <i class="ii el-icon-circle-plus" @click="addEmptyRouteHeader(rootindex,routeindex)" />
 
                   </el-form-item>
-                  <el-form v-for="(header,headerindex) in routeconfig._headers" :inline="true" style="margin-top: 10px">
+                  <el-form
+                    v-for="(header,headerindex) in routeconfig._headers"
+                    :key="headerindex"
+                    :inline="true"
+                    style="margin-top: 10px"
+                  >
                     <el-form-item label="选择类型">
-                      <el-select v-model="header.type" style="width: 100px" @change="checkRouteHeader(routeindex,routeindex,headerindex)">
+                      <el-select
+                        v-model="header.type"
+                        style="width: 100px"
+                        @change="checkRouteHeader(routeindex,routeindex,headerindex)"
+                      >
                         <el-option label="请求" value="request" />
                         <el-option label="响应" value="response" />
                       </el-select>
                     </el-form-item>
                     <el-form-item label="操作模式">
-                      <el-select v-model="header.mod" style="width: 100px" @change="checkRouteHeader(routeindex,routeindex,headerindex)">
+                      <el-select
+                        v-model="header.mod"
+                        style="width: 100px"
+                        @change="checkRouteHeader(routeindex,routeindex,headerindex)"
+                      >
                         <el-option label="添加" value="add" />
                         <el-option label="设置" value="set" />
                         <el-option label="删除" value="remove" />
                       </el-select>
                     </el-form-item>
                     <el-form-item label="key">
-                      <el-input v-model="header.key" style="width:120px" placeholder="头的名称" @change="checkRouteHeader(routeindex,routeindex,headerindex)" />
+                      <el-input
+                        v-model="header.key"
+                        style="width:120px"
+                        placeholder="头的名称"
+                        @change="checkRouteHeader(routeindex,routeindex,headerindex)"
+                      />
                     </el-form-item>
                     <el-form-item label="value">
-                      <el-input v-model="header.value" style="width:120px" placeholder="头的值" @change="checkRouteHeader(routeindex,routeindex,headerindex)" />
+                      <el-input
+                        v-model="header.value"
+                        style="width:120px"
+                        placeholder="头的值"
+                        @change="checkRouteHeader(routeindex,routeindex,headerindex)"
+                      />
                     </el-form-item>
                     <el-form-item>
-                      <el-button v-show="headerindex>0" type="primary" @click="rmRouteHeader(rootindex,routeindex,headerindex)">-</el-button>
+                      <el-button
+                        v-show="headerindex>0"
+                        type="primary"
+                        @click="rmRouteHeader(rootindex,routeindex,headerindex)"
+                      >-
+                      </el-button>
                     </el-form-item>
                   </el-form>
                 </el-form-item>
@@ -106,20 +152,24 @@
 </template>
 <script>
 const emptyMatch = { name: '', uri: {}, _uri: { key: 'exact', value: '' }}
-const emptyRoute = { destination:
+const emptyRoute = {
+  destination:
     { host: '', subset: '', port: { number: 0 }},
-weight: 100,
-headers: {}, _headers: [{ type: '', mod: '', key: '', value: '' }] }
+  weight: 100,
+  headers: {}, _headers: [{ type: '', mod: '', key: '', value: '' }]
+}
 const emptyHttp = { // 先写这么多
   name: '',
   match: [copyObject(emptyMatch)],
   route: [copyObject(emptyRoute)]
 }
+
 // 拷贝对象
 function copyObject(obj) {
   var str = JSON.stringify(obj)
   return JSON.parse(str)
 }
+
 export default {
   props: {
     spec: {
@@ -187,7 +237,9 @@ export default {
       const match = this.getMatch(rootindex, matchindex, false)
       if (match !== null) {
         match.uri = {} // 先清空 。因为 uri匹配只能填一个
-        if (match._uri.key !== '' && match._uri.value !== '') { match.uri[match._uri.key] = match._uri.value }
+        if (match._uri.key !== '' && match._uri.value !== '') {
+          match.uri[match._uri.key] = match._uri.value
+        }
       }
     },
     // 添加 Route对象的头操作部分
@@ -320,7 +372,9 @@ export default {
         // {name:'',uri:{},_uri:{key:'exact',value:''}}
         for (var matchindex = 0; matchindex < http.match.length; matchindex++) {
           var match = http.match[matchindex] // 读取match
-          if (match.name === undefined) { this.$set(match, 'name', '') }
+          if (match.name === undefined) {
+            this.$set(match, 'name', '')
+          }
           var _uriObject = { key: 'exact', value: '' }
           // 先清空
           for (var key in match.uri) { // 遍历uri属性
@@ -349,6 +403,11 @@ export default {
 }
 </script>
 <style>
-.el-form-item__content{line-height: normal}
-.ii{cursor:pointer}
+.el-form-item__content {
+  line-height: normal
+}
+
+.ii {
+  cursor: pointer
+}
 </style>

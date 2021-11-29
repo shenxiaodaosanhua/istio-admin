@@ -19,7 +19,7 @@
       class="box-card"
     >
       <span>
-        标签配置 (常见的是app: ingressgateway)
+        标签配置 (常见的是app:istio-ingressgateway)
         <i class="ii el-icon-circle-plus" @click="selector.push({key:'',value:''})" />
       </span>
     </el-card>

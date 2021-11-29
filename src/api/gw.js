@@ -7,6 +7,13 @@ export function getGwByNs(ns) {
   })
 }
 
+export function getGwAll() {
+  return request({
+    url: '/v1/gw-all',
+    method: 'get'
+  })
+}
+
 export function createGw(data) {
   return request({
     url: '/v1/gw',

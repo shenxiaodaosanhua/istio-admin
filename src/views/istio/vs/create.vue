@@ -28,6 +28,7 @@
       </el-form>
     </el-card>
     <Hosts ref="hostsConfig" />
+    <GatewayConfig ref="gatewayConfig" />
     <HttpConfig ref="httpConfig" />
     <div>
       <json-viewer :value="spec" :expand-depth="8" copyable sort />
@@ -46,7 +47,8 @@ import { createVs, getVsByNsAndName, updateVs } from '@/api/vs'
 export default {
   components: {
     Hosts: () => import('./host.vue'),
-    HttpConfig: () => import('./http.vue')
+    HttpConfig: () => import('./http.vue'),
+    GatewayConfig: () => import('./gateway.vue')
   },
   data() {
     return {

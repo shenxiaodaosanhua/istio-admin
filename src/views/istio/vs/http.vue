@@ -166,7 +166,7 @@ const emptyHttp = { // 先写这么多
 
 // 拷贝对象
 function copyObject(obj) {
-  var str = JSON.stringify(obj)
+  const str = JSON.stringify(obj)
   return JSON.parse(str)
 }
 
@@ -199,13 +199,13 @@ export default {
   methods: {
     // 专门封装一个函数 ,可以用来取出match列表或单个match对象
     getMatch(rootindex, matchindex, islist) {
-      for (var i = 0; i < this.childHttp.length; i++) {
+      for (let i = 0; i < this.childHttp.length; i++) {
         if (i === rootindex) {
-          var matchList = this.childHttp[i].match
+          const matchList = this.childHttp[i].match
           if (islist) { // 要的是列表 还是 单个
             return matchList
           }
-          for (var j = 0; j < matchList.length; j++) {
+          for (let j = 0; j < matchList.length; j++) {
             if (j === matchindex) {
               return matchList[matchindex]
             }

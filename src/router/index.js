@@ -117,6 +117,13 @@ export const constantRoutes = [
         meta: { title: '创建网关', icon: 'table' }
       },
       {
+        path: '/istio/gw/update',
+        name: 'gw-update',
+        hidden: true,
+        component: () => import('@/views/istio/gw/update'),
+        meta: { title: '编辑网关', icon: 'table' }
+      },
+      {
         path: '/istio/gw/detail',
         name: 'gw-detail',
         hidden: true,

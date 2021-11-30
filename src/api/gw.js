@@ -22,6 +22,14 @@ export function createGw(data) {
   })
 }
 
+export function updateGw(data) {
+  return request({
+    url: '/v1/gw/' + data.metadata.namespace + '/' + data.metadata.name,
+    method: 'put',
+    data: data
+  })
+}
+
 export function getGwDetailByNsAndName(ns, name) {
   return request({
     url: '/v1/gw/' + ns + '/' + name,

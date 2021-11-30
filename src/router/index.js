@@ -77,54 +77,61 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/Istio管理',
+    path: '/vs',
     component: Layout,
-    redirect: '/istio/vs/index',
-    name: 'Istio管理',
-    meta: { title: 'Istio管理', icon: 'el-icon-s-help' },
+    redirect: '/vs/index',
+    name: '虚拟服务管理',
+    meta: { title: '虚拟服务管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: '/istio/vs/index',
+        path: '/vs/index',
         name: 'vs-index',
         component: () => import('@/views/istio/vs/index'),
-        meta: { title: '虚拟服务', icon: 'table' }
+        meta: { title: '虚拟服务列表', icon: 'el-icon-s-help' }
       },
       {
-        path: '/istio/vs/create',
-        name: 'vs-create',
-        hidden: true,
-        component: () => import('@/views/istio/vs/create'),
-        meta: { title: '创建虚拟服务', icon: 'table' }
-      },
-      {
-        path: '/istio/vs/detail',
+        path: '/vs/detail',
         name: 'vs-detail',
         hidden: true,
         component: () => import('@/views/istio/vs/detail'),
         meta: { title: '虚拟服务详情', icon: 'table' }
       },
       {
-        path: '/istio/gw/index',
+        path: '/vs/create',
+        name: 'vs-create',
+        component: () => import('@/views/istio/vs/create'),
+        meta: { title: '创建虚拟服务', icon: 'el-icon-s-help' }
+      }
+    ]
+  },
+  {
+    path: '/gw',
+    component: Layout,
+    redirect: '/gw/index',
+    name: '网关管理',
+    meta: { title: '网关管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '/gw/index',
         name: 'gw-index',
         component: () => import('@/views/istio/gw/index'),
         meta: { title: '网关服务', icon: 'table' }
       },
       {
-        path: '/istio/gw/create',
+        path: '/gw/create',
         name: 'gw-create',
-        hidden: true,
         component: () => import('@/views/istio/gw/create'),
         meta: { title: '创建网关', icon: 'table' }
       },
       {
-        path: '/istio/gw/update',
+        path: '/gw/update',
         name: 'gw-update',
         hidden: true,
         component: () => import('@/views/istio/gw/update'),
         meta: { title: '编辑网关', icon: 'table' }
       },
       {
-        path: '/istio/gw/detail',
+        path: '/gw/detail',
         name: 'gw-detail',
         hidden: true,
         component: () => import('@/views/istio/gw/detail'),

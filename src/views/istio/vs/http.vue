@@ -16,36 +16,33 @@
             <!--match相关。可以有多个-->
             <el-card class="box-card" style="margin-top: 10px">
               <div style="text-align:right;width:100%;display: block">
-                <i class="ii el-icon-circle-plus" @click="addMatch(rootindex)" />
+                <i class="ii el-icon-circle-plus" @click="addSlice(rootindex,'match',{})" />
               </div>
-              <el-form
-                v-for="(match,matchindex) in httpcfg.match"
-                :key="matchindex"
-                :inline="false"
-                style="margin-top: 10px"
-              >
+              <el-form v-for="(match,matchindex) in httpcfg.match" :key="matchindex" style="margin-top: 10px">
                 <el-form-item>
-                  <i class="ii el-icon-remove-outline" @click="rmMatch(rootindex,matchindex)" />
+                  <i class="ii el-icon-remove-outline" @click="rmSlice(rootindex,'match',matchindex)" />
                 </el-form-item>
                 <el-form-item label="匹配名称">
                   <el-input v-model="match.name" placeholder="填写match name" />
                 </el-form-item>
                 <el-form-item label="uri匹配">
-                  <el-select
-                    v-model="match._uri.key"
-                    style="width: 100px"
-                    @change="()=>changeUri(rootindex,matchindex)"
-                  >
-                    <el-option value="exact" label="精确匹配" />
-                    <el-option value="prefix" label="前缀匹配" />
-                    <el-option value="regex" label="regex正则匹配" />
-                  </el-select>
-                  <el-input
-                    v-model="match._uri.value"
-                    placeholder="如填写：/users/v2/"
-                    style="width: 150px;margin-left:10px"
-                    @change="changeUri(rootindex,matchindex)"
-                  />
+                  <StringMatch :data.sync="match.uri" placeholder="譬如/user" />
+                </el-form-item>
+                <el-form-item label="method匹配">
+                  <StringMatch :data.sync="match.method" placeholder="如GET 或POST" />
+                </el-form-item>
+                <el-form-item label="头匹配" style="width:100%">
+                  <MapStringMatch :data.sync="match.headers" placeholder="必须是小写" />
+                </el-form-item>
+
+              </el-form>
+            </el-card>
+
+            <!--rewrite相关 ,只有一个-->
+            <el-card class="box-card" style="margin-top: 10px">
+              <el-form style="margin-top: 10px">
+                <el-form-item label="重写配置">
+                  <StringObject :data.sync="httpcfg.rewrite" props="uri,authority,abc" />
                 </el-form-item>
 
               </el-form>
@@ -89,12 +86,7 @@
                     <i class="ii el-icon-circle-plus" @click="addEmptyRouteHeader(rootindex,routeindex)" />
 
                   </el-form-item>
-                  <el-form
-                    v-for="(header,headerindex) in routeconfig._headers"
-                    :key="headerindex"
-                    :inline="true"
-                    style="margin-top: 10px"
-                  >
+                  <el-form v-for="(header,headerindex) in routeconfig._headers" :key="headerindex" :inline="true" style="margin-top: 10px">
                     <el-form-item label="选择类型">
                       <el-select
                         v-model="header.type"
@@ -151,7 +143,7 @@
   </div>
 </template>
 <script>
-const emptyMatch = { name: '', uri: {}, _uri: { key: 'exact', value: '' }}
+const emptyMatch = { name: '', uri: {}}
 const emptyRoute = {
   destination:
     { host: '', subset: '', port: { number: 0 }},
@@ -161,6 +153,7 @@ const emptyRoute = {
 const emptyHttp = { // 先写这么多
   name: '',
   match: [copyObject(emptyMatch)],
+  rewrite: {},
   route: [copyObject(emptyRoute)]
 }
 
@@ -171,6 +164,11 @@ function copyObject(obj) {
 }
 
 export default {
+  components: {
+    StringMatch: () => import('@/views/common/StringMatch.vue'),
+    MapStringMatch: () => import('@/views/common/MapStringMatch.vue'),
+    StringObject: () => import('@/views/common/StringObject.vue')
+  },
   props: {
     spec: {
       type: Object,
@@ -182,7 +180,6 @@ export default {
   data() {
     return {
       childHttp: []
-
     }
   },
   watch: {
@@ -197,23 +194,7 @@ export default {
 
   },
   methods: {
-    // 专门封装一个函数 ,可以用来取出match列表或单个match对象
-    getMatch(rootindex, matchindex, islist) {
-      for (let i = 0; i < this.childHttp.length; i++) {
-        if (i === rootindex) {
-          const matchList = this.childHttp[i].match
-          if (islist) { // 要的是列表 还是 单个
-            return matchList
-          }
-          for (let j = 0; j < matchList.length; j++) {
-            if (j === matchindex) {
-              return matchList[matchindex]
-            }
-          }
-        }
-      }
-      return null
-    },
+
     // 专门封装一个函数 ,可以用来取出route列表或单个route对象
     getRoute(rootindex, routeindex, islist) {
       for (var i = 0; i < this.childHttp.length; i++) {
@@ -232,16 +213,6 @@ export default {
       return null
     },
 
-    // URI配置选择切换或uri文本发生变化时触发
-    changeUri(rootindex, matchindex) {
-      const match = this.getMatch(rootindex, matchindex, false)
-      if (match !== null) {
-        match.uri = {} // 先清空 。因为 uri匹配只能填一个
-        if (match._uri.key !== '' && match._uri.value !== '') {
-          match.uri[match._uri.key] = match._uri.value
-        }
-      }
-    },
     // 添加 Route对象的头操作部分
     addEmptyRouteHeader(rootindex, routeindex) {
       const routeList = this.getRoute(rootindex, 0, true)
@@ -259,20 +230,19 @@ export default {
       var routeList = this.childHttp[rootindex].route
       routeList.push(copyObject(emptyRoute))
     },
-    addMatch(rootindex) {
-      const matchList = this.getMatch(rootindex, 0, true)
-      if (matchList === undefined || matchList === null) { // 编辑的时候可能 没有值，那我们就构建一个
-        this.$set(this.childHttp[rootindex], 'match', [copyObject(emptyMatch)])
+    // 写一个通用的加入空对象的方法，rootindex是childHttp对应的索引  key 就是属性名 ,value 就是要加入的对象
+    addSlice(rootindex, key, value) {
+      if (this.childHttp[rootindex][key] === undefined) {
+        this.$set(this.childHttp[rootindex], key, [copyObject(value)])
       } else {
-        matchList.unshift(copyObject(emptyMatch))
+        this.childHttp[rootindex][key].unshift(copyObject(value))
       }
     },
-    rmMatch(rootindex, matchindex) {
-      const matchList = this.getMatch(rootindex, 0, true)
-      if (matchList !== null) {
-        matchList.splice(matchindex, 1)
-      }
+    // 写一个通用的删除对象的方法  rootindex是childHttp对应的索引   key 就是属性名
+    rmSlice(rootindex, key, keyindex) {
+      this.childHttp[rootindex][key].splice(keyindex, 1)
     },
+
     rmRoute(rootindex, routeindex) {
       const routeList = this.getRoute(rootindex, routeindex, true)
       if (routeList !== null) {
@@ -372,9 +342,7 @@ export default {
         // {name:'',uri:{},_uri:{key:'exact',value:''}}
         for (var matchindex = 0; matchindex < http.match.length; matchindex++) {
           var match = http.match[matchindex] // 读取match
-          if (match.name === undefined) {
-            this.$set(match, 'name', '')
-          }
+          if (match.name === undefined) { this.$set(match, 'name', '') }
           var _uriObject = { key: 'exact', value: '' }
           // 先清空
           for (var key in match.uri) { // 遍历uri属性

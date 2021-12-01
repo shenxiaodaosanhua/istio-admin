@@ -66,7 +66,6 @@
                 <el-form-item label=" 目标" style="padding-left:20px">
                   <el-form :inline="true" style="margin-top: 10px">
                     <el-form-item label="服务名">
-                      <el-input v-model="routeconfig.destination.host" placeholder="填写服务名" />
                       <el-select v-model="routeconfig.destination.host" placeholder="请选择服务">
                         <el-option
                           v-for="svc in svcs"

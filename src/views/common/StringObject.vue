@@ -24,7 +24,27 @@
 <script>
 export default {
   // props 可以传 类似 a,b,c 作为可选属性
-  props: ['data', 'placeholder', 'props'],
+  // props: ['data', 'placeholder', 'props'],
+  props: {
+    data: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    placeholder: {
+      type: String,
+      default() {
+        return ''
+      }
+    },
+    props: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       objectData: {}, // 譬如{uri:"xxxxx",authority:""}   属性是父组件传的，不一定是固定的

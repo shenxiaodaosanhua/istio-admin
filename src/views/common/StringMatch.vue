@@ -10,7 +10,21 @@
 </template>
 <script>
 export default {
-  props: ['data', 'placeholder'],
+  // props: ['data', 'placeholder'],
+  props: {
+    data: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    placeholder: {
+      type: String,
+      default() {
+        return ''
+      }
+    }
+  },
   data() {
     return {
       matchObject: {}, // 譬如{exact:"xxxxx"}

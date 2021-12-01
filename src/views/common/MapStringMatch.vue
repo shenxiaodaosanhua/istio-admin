@@ -18,7 +18,21 @@ export default {
   components: {
     StringMatch: () => import('@/views/common/StringMatch.vue')
   },
-  props: ['data', 'placeholder'],
+  // props: ['data', 'placeholder'],
+  props: {
+    data: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    placeholder: {
+      type: String,
+      default() {
+        return ''
+      }
+    }
+  },
   data() {
     return {
       mapSlice: [], // {key:'字符串',value:{StringMatch}}

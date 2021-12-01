@@ -4,9 +4,6 @@
       <div slot="header" class="clearfix">
         <span>http设置 <i class="ii el-icon-circle-plus" @click="addHttp" /></span>
       </div>
-      <div v-show="$parent.tips">
-        tips:基于HTTP/HTTP2/GRPC的路由配置
-      </div>
       <div>
         <el-form v-for="(httpcfg,rootindex) in childHttp" :key="rootindex" :inline="true" style="margin-top: 10px">
           <el-form-item label="http配置名称" style="color: green!important;font-weight: bold">
@@ -70,6 +67,14 @@
                   <el-form :inline="true" style="margin-top: 10px">
                     <el-form-item label="服务名">
                       <el-input v-model="routeconfig.destination.host" placeholder="填写服务名" />
+                      <el-select v-model="routeconfig.destination.host" placeholder="请选择服务">
+                        <el-option
+                          v-for="svc in svcs"
+                          :key="svc.metadata.name"
+                          :label="svc.metadata.name"
+                          :value="svc.metadata.name"
+                        />
+                      </el-select>
                     </el-form-item>
                     <el-form-item label="子集">
                       <el-input v-model="routeconfig.destination.subset" placeholder="子集" />
@@ -143,6 +148,8 @@
   </div>
 </template>
 <script>
+import { getSvcByNs } from '@/api/svc'
+
 const emptyMatch = { name: '', uri: {}}
 const emptyRoute = {
   destination:
@@ -179,7 +186,8 @@ export default {
   },
   data() {
     return {
-      childHttp: []
+      childHttp: [],
+      svcs: []
     }
   },
   watch: {
@@ -190,20 +198,24 @@ export default {
 
     }
   },
+  created() {
+    getSvcByNs('myistio').then(res => {
+      this.svcs = res.data
+    })
+  },
   updated() {
 
   },
   methods: {
-
     // 专门封装一个函数 ,可以用来取出route列表或单个route对象
     getRoute(rootindex, routeindex, islist) {
-      for (var i = 0; i < this.childHttp.length; i++) {
+      for (let i = 0; i < this.childHttp.length; i++) {
         if (i === rootindex) {
-          var getList = this.childHttp[i].route
+          const getList = this.childHttp[i].route
           if (islist) { // 要的是列表 还是 单个
             return getList
           }
-          for (var j = 0; j < getList.length; j++) {
+          for (let j = 0; j < getList.length; j++) {
             if (j === routeindex) {
               return getList[routeindex]
             }

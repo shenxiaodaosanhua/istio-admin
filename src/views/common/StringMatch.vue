@@ -13,9 +13,9 @@ export default {
   // props: ['data', 'placeholder'],
   props: {
     data: {
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       }
     },
     placeholder: {

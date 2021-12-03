@@ -18,13 +18,6 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <el-switch
-            v-model="tips"
-            active-text="打开教学"
-            inactive-text="关闭教学"
-          />
-        </el-form-item>
       </el-form>
     </el-card>
     <Hosts ref="hostsConfig" />

@@ -4,9 +4,6 @@
       <div slot="header" class="clearfix">
         <span>gateway设置 <i class="ii el-icon-circle-plus" @click="addGW" /></span>
       </div>
-      <div v-show="$parent.tips">
-        网关配置:如设置了此项，规则将仅适用于网关。如需同时适应于网关和sidecar，需增加mesh配置
-      </div>
       <div>
         <el-form v-for="(host,index) in gateways" :key="index" :inline="true" style="margin-top: 10px">
           <!--<el-input placeholder="填写网关名称" style="width: 150px" v-model="gateways[index]" />-->

@@ -105,6 +105,21 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/ds',
+    component: Layout,
+    redirect: '/ds/index',
+    name: '路由规则管理',
+    meta: { title: '路由规则管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '/ds/index',
+        name: 'ds-index',
+        component: () => import('@/views/istio/ds/index'),
+        meta: { title: '路由规则列表', icon: 'el-icon-s-help' }
+      }
+    ]
+  },
+  {
     path: '/gw',
     component: Layout,
     redirect: '/gw/index',

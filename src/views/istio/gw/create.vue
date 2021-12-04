@@ -124,7 +124,10 @@ export default {
   methods: {
     submitForm() {
       createGw(this.form).then(res => {
-        console.log(res.data)
+        if (res.data === 'ok') {
+          this.$message.success('操作成功')
+          this.$router.replace('/gw/index')
+        }
       })
     },
     parseSelector() {

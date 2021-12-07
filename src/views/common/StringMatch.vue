@@ -35,8 +35,8 @@ export default {
   watch: {
     matchObject: {
       handler: function(newVal, oldVal) {
-        var obj = newVal
-        for (var key in obj) {
+        let obj = newVal
+        for (const key in obj) {
           if (obj[key] === '') { // 如果为空，直接返回空对象
             obj = {}
           }

@@ -27,19 +27,49 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      </el-form-item>
     </el-form>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>流量策略</span>
+      </div>
+      <el-form label-position="right" label-width="80px" :model="form.spec">
+        <el-form-item label="负载策略">
+          <el-radio-group v-model="trafficPolicyType" @change="trafficPolicyChange">
+            <el-radio
+              v-for="(item, index) in trafficPolicy"
+              :key="index"
+              :label="index"
+            >
+              {{ item.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <Simple v-if="! trafficPolicy[0].hide" :simple="trafficPolicy[0]" />
+        <ConsistentHash v-if="! trafficPolicy[1].hide" :simple="trafficPolicy[1]" />
+      </el-form>
+    </el-card>
+    <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <div>
+      <json-viewer :value="form" :expand-depth="8" copyable sort />
+    </div>
   </el-main>
 </template>
 
 <script>
 import { getNsAll } from '@/api/ns'
 import { getSvcAll } from '@/api/svc'
-import { createDr } from '@/api/dr'
 
 export default {
+  components: {
+    Simple: () => import('@/views/common/dr/Simple'),
+    ConsistentHash: () => import('@/views/common/dr/ConsistentHash')
+  },
   data() {
     return {
       form: {
@@ -48,11 +78,40 @@ export default {
           namespace: ''
         },
         spec: {
-          host: ''
+          host: '',
+          trafficPolicy: {
+            loadBalancer: {}
+          }
         }
       },
       namespaceData: [],
-      svcs: []
+      svcs: [],
+      trafficPolicyType: 0,
+      trafficPolicy: [
+        {
+          simple: {
+            simple: ''
+          },
+          hide: false,
+          label: '简单负载'
+        },
+        {
+          consistentHash: {
+            httpCookie: {
+              name: '',
+              ttl: '0s'
+            }
+          },
+          hide: true,
+          label: '哈希负载'
+        },
+        {
+          localityLbSetting: {
+          },
+          hide: true,
+          label: '部分负载'
+        }
+      ]
     }
   },
   created() {
@@ -65,13 +124,19 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.form)
-      createDr(this.form).then(res => {
-        if (res.data === 'ok') {
-          this.$message.success('新增成功')
-          this.$router.replace('/dr/index')
-        }
+      console.log(this.trafficPolicy)
+      // createDr(this.form).then(res => {
+      //   if (res.data === 'ok') {
+      //     this.$message.success('新增成功')
+      //     this.$router.replace('/dr/index')
+      //   }
+      // })
+    },
+    trafficPolicyChange() {
+      this.trafficPolicy.map(res => {
+        res.hide = true
       })
+      this.trafficPolicy[this.trafficPolicyType].hide = false
     }
   }
 }

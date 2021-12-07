@@ -6,3 +6,10 @@ export function getSvcByNs(ns) {
     method: 'get'
   })
 }
+
+export function getSvcAll() {
+  return request({
+    url: '/v1/svc-all',
+    method: 'get'
+  })
+}

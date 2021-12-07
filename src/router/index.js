@@ -120,8 +120,15 @@ export const constantRoutes = [
       {
         path: '/dr/detail',
         name: 'dr-detail',
+        hidden: true,
         component: () => import('@/views/istio/dr/detail'),
-        meta: { title: '路由规则列表', icon: 'el-icon-s-help' }
+        meta: { title: '路由规则详情', icon: 'el-icon-s-help' }
+      },
+      {
+        path: '/dr/create',
+        name: 'dr-create',
+        component: () => import('@/views/istio/dr/create'),
+        meta: { title: '新增路由规则', icon: 'el-icon-s-help' }
       }
     ]
   },

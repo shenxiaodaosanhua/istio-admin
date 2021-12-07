@@ -111,10 +111,24 @@ export default {
       })
     },
     deleteDs(row) {
-      deleteDs(row.metadata.namespace, row.metadata.name).then(res => {
-        if (res.data === 'ok') {
-          this.$message.success('删除成功')
-        }
+      this.$confirm('确定删除吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteDs(row.metadata.namespace, row.metadata.name).then(res => {
+          if (res.data === 'ok') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

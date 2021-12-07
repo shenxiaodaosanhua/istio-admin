@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'ds-create'}">新增规则</router-link>
+          <router-link :to="{name: 'dr-create'}">新增规则</router-link>
         </el-col>
       </el-row>
     </el-header>
@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <el-button type="text" size="small">
               <router-link
-                :to="{name:'gw-detail', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
+                :to="{name:'dr-detail', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
               >查看
               </router-link>
             </el-button>
@@ -73,7 +73,7 @@
 <script>
 import { getNsAll } from '@/api/ns'
 import { NewClient } from '@/utils/ws'
-import { deleteDs, getDsByNs } from '@/api/ds'
+import { deleteDs, getDsByNs } from '@/api/dr'
 
 export default {
   data() {
@@ -96,7 +96,7 @@ export default {
     this.wsClient.onmessage = (e) => {
       if (e.data !== 'ping') {
         const result = JSON.parse(e.data)
-        if (result.type === 'ds' && result.result.ns === this.defaultValue) {
+        if (result.type === 'dr' && result.result.ns === this.defaultValue) {
           this.dsData = result.result.data
           this.$forceUpdate()
         }

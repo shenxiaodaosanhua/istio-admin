@@ -194,7 +194,6 @@ export default {
       handler: function(newVal, oldVal) {
         this.$parent.updateObject('http', newVal)
       }
-
     }
   },
   created() {

@@ -44,8 +44,8 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <Simple v-if="! trafficPolicy[0].hide" :simple="trafficPolicy[0]" />
-        <ConsistentHash v-if="! trafficPolicy[1].hide" :simple="trafficPolicy[1]" />
+        <Simple v-if="! trafficPolicy[0].hide" :data.sync="form.spec.trafficPolicy.loadBalancer" />
+        <ConsistentHash v-if="! trafficPolicy[1].hide" :data.sync="form.spec.trafficPolicy.loadBalancer" />
       </el-form>
     </el-card>
     <el-row type="flex" class="row-bg" justify="center">
@@ -64,6 +64,7 @@
 <script>
 import { getNsAll } from '@/api/ns'
 import { getSvcAll } from '@/api/svc'
+import { createDr } from '@/api/dr'
 
 export default {
   components: {
@@ -124,13 +125,13 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.trafficPolicy)
-      // createDr(this.form).then(res => {
-      //   if (res.data === 'ok') {
-      //     this.$message.success('新增成功')
-      //     this.$router.replace('/dr/index')
-      //   }
-      // })
+      // console.log('++++', this.trafficPolicy)
+      createDr(this.form).then(res => {
+        if (res.data === 'ok') {
+          this.$message.success('新增成功')
+          this.$router.replace('/dr/index')
+        }
+      })
     },
     trafficPolicyChange() {
       this.trafficPolicy.map(res => {

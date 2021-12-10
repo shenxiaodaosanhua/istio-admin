@@ -10,27 +10,28 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="名称">
-      <el-input v-model="lb.name" />
-    </el-form-item>
-    <el-form-item label="地址">
-      <el-input v-model="lb.path" />
-    </el-form-item>
-    <el-form-item label="超时时间">
-      <el-input v-model="lb.ttl" />
-    </el-form-item>
+    <HttpCookie v-if="value === 'httpCookie'" @update="updateObj" />
+    <HttpHeaderName v-if="value === 'httpHeaderName'" @update="updateObj" />
+    <UseSourceIp v-if="value === 'useSourceIp'" @update="updateObj" />
+    <HttpQueryParameterName v-if="value === 'httpQueryParameterName'" @update="updateObj" />
+    <MinimumRingSize v-if="value === 'minimumRingSize'" @update="updateObj" />
   </el-container>
 </template>
 
 <script>
 export default {
+  components: {
+    HttpCookie: () => import('@/views/common/dr/HttpCookie'),
+    HttpHeaderName: () => import('@/views/common/dr/HttpHeaderName'),
+    UseSourceIp: () => import('@/views/common/dr/UseSourceIp'),
+    HttpQueryParameterName: () => import('@/views/common/dr/HttpQueryParameterName'),
+    MinimumRingSize: () => import('@/views/common/dr/MinimumRingSize')
+  },
   props: {
-    consistentHash: {
+    data: {
       type: Object,
-      default: () => {
-        return {
-          httpHeaderName: {}
-        }
+      default() {
+        return {}
       }
     }
   },
@@ -44,31 +45,30 @@ export default {
         'minimumRingSize'
       ],
       value: 'httpHeaderName',
-      lb: {
-        name: '',
-        path: '',
-        ttl: ''
-      },
+      lb: {},
       myLb: {}
     }
   },
   watch: {
     myLb: {
-      handler: (newVal, oldVal) => {
-        console.log(newVal)
-        // this.$emit('update:consistentHashLB', newVal)
+      handler: function(newVal, oldVal) {
+        const obj = {
+          'consistentHash': this.myLb
+        }
+        this.$emit('update:data', obj)
       },
       deep: true
     },
     lb: {
-      handler: (newVal, oldVal) => {
-        console.log(newVal)
+      handler: function(newVal, oldVal) {
+        this.myLb = {}
+        this.myLb[this.value] = newVal
       },
       deep: true
     }
   },
   created() {
-    this.myLb = this.consistentHash
+    this.myLb = this.data
     if (this.myLb === null || this.myLb === undefined) {
       this.myLb = {}
     } else {
@@ -82,8 +82,11 @@ export default {
     },
     unParseObject() {
       for (const key in this.myLb) {
-        console.log(key)
+        console.log('----', key)
       }
+    },
+    updateObj(value) {
+      this.lb = value
     }
   }
 }

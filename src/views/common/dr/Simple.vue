@@ -1,6 +1,6 @@
 <template>
   <el-form-item label="负载类型">
-    <el-select v-model="data.simple" placeholder="请选择">
+    <el-select v-model="simpleValue" placeholder="请选择">
       <el-option
         v-for="item in simpleLB"
         :key="item"
@@ -17,18 +17,26 @@ export default {
     data: {
       type: Object,
       default: () => {
-        return {
-          simple: ''
-        }
+        return {}
       }
     }
   },
   data() {
     return {
-      simpleLB: ['ROUND_ROBIN', 'LEAST_CONN', 'RANDOM', 'PASSTHROUGH']
+      simpleLB: ['ROUND_ROBIN', 'LEAST_CONN', 'RANDOM', 'PASSTHROUGH'],
+      simpleValue: ''
     }
   },
-  methods: {
+  watch: {
+    simpleValue: {
+      handler: function(newVal, oldVal) {
+        const obj = {
+          'simple': newVal
+        }
+        this.$emit('update:data', obj)
+      },
+      deep: true
+    }
   }
 }
 </script>

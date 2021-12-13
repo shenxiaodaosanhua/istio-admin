@@ -28,9 +28,9 @@
         </el-select>
       </el-form-item>
     </el-form>
-    <el-card class="box-card">
+    <el-card class="box-card card-top">
       <div slot="header" class="clearfix">
-        <span>流量策略</span>
+        <span>负载策略</span>
       </div>
       <el-form label-position="right" label-width="80px" :model="form.spec">
         <el-form-item label="负载策略">
@@ -47,6 +47,21 @@
         <Simple v-if="! trafficPolicy[0].hide" :data.sync="form.spec.trafficPolicy.loadBalancer" />
         <ConsistentHash v-if="! trafficPolicy[1].hide" :data.sync="form.spec.trafficPolicy.loadBalancer" />
       </el-form>
+    </el-card>
+    <el-card class="box-card card-top">
+      <div slot="header" class="clearfix">
+        <span>连接池</span>
+      </div>
+      <el-form label-position="right" label-width="90px" :model="form.spec">
+        <el-form-item label="连接池协议">
+          <el-radio-group v-model="poolType">
+            <el-radio label="tcp">TCP</el-radio>
+            <el-radio label="http">HTTP</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <TCP v-if="poolType === 'tcp'" :data.sync="form.spec.trafficPolicy.connectionPool" />
+      <HTTP v-if="poolType === 'http'" :data.sync="form.spec.trafficPolicy.connectionPool" />
     </el-card>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
@@ -69,7 +84,9 @@ import { createDr } from '@/api/dr'
 export default {
   components: {
     Simple: () => import('@/views/common/dr/Simple'),
-    ConsistentHash: () => import('@/views/common/dr/ConsistentHash')
+    ConsistentHash: () => import('@/views/common/dr/ConsistentHash'),
+    TCP: () => import('@/views/common/dr/pool/Tcp'),
+    HTTP: () => import('@/views/common/dr/pool/Http')
   },
   data() {
     return {
@@ -81,7 +98,8 @@ export default {
         spec: {
           host: '',
           trafficPolicy: {
-            loadBalancer: {}
+            loadBalancer: {},
+            connectionPool: {}
           }
         }
       },
@@ -112,7 +130,8 @@ export default {
           hide: true,
           label: '部分负载'
         }
-      ]
+      ],
+      poolType: ''
     }
   },
   created() {
@@ -125,7 +144,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      // console.log('++++', this.trafficPolicy)
       createDr(this.form).then(res => {
         if (res.data === 'ok') {
           this.$message.success('新增成功')
@@ -139,10 +157,15 @@ export default {
       })
       this.trafficPolicy[this.trafficPolicyType].hide = false
     }
+    // poolChange() {
+    //   this.form.spec.trafficPolicy.connectionPool[this.poolType] = {}
+    // }
   }
 }
 </script>
 
 <style scoped>
-
+  .card-top{
+    margin: 10px 0;
+  }
 </style>

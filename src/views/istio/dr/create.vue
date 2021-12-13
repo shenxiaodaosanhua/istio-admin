@@ -63,6 +63,31 @@
       <TCP v-if="poolType === 'tcp'" :data.sync="form.spec.trafficPolicy.connectionPool" />
       <HTTP v-if="poolType === 'http'" :data.sync="form.spec.trafficPolicy.connectionPool" />
     </el-card>
+    <el-card class="box-card card-top">
+      <div slot="header" class="clearfix">
+        <span>熔断器</span>
+      </div>
+      <el-form label-position="right" label-width="130px" :model="form.spec.trafficPolicy.outlierDetection">
+        <el-form-item label="熔断错误数">
+          <el-input v-model="outlierDetection.consecutive_gateway_errors" />
+        </el-form-item>
+        <el-form-item label="5XX错误数">
+          <el-input v-model="outlierDetection.consecutive_5xx_errors" />
+        </el-form-item>
+        <el-form-item label="弹出时间">
+          <el-input v-model="outlierDetection.base_ejection_time" placeholder="1h/1m/1s/1ms" />
+        </el-form-item>
+        <el-form-item label="扫描间隔">
+          <el-input v-model="outlierDetection.interval" placeholder="10s" />
+        </el-form-item>
+        <el-form-item label="弹出最小百分比">
+          <el-input v-model="outlierDetection.min_health_percent" placeholder="0%" />
+        </el-form-item>
+        <el-form-item label="弹出最大百分比">
+          <el-input v-model="outlierDetection.max_ejection_percent" placeholder="10%" />
+        </el-form-item>
+      </el-form>
+    </el-card>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
         <div class="grid-content bg-purple">
@@ -99,7 +124,8 @@ export default {
           host: '',
           trafficPolicy: {
             loadBalancer: {},
-            connectionPool: {}
+            connectionPool: {},
+            outlierDetection: {}
           }
         }
       },
@@ -131,7 +157,22 @@ export default {
           label: '部分负载'
         }
       ],
-      poolType: ''
+      poolType: '',
+      outlierDetection: {}
+    }
+  },
+  watch: {
+    outlierDetection: {
+      handler: function(newVal, oldVal) {
+        const obj = {}
+        for (const key in newVal) {
+          if (newVal[key] !== '') {
+            obj[key] = newVal[key]
+          }
+        }
+        this.form.spec.trafficPolicy.outlierDetection = obj
+      },
+      deep: true
     }
   },
   created() {

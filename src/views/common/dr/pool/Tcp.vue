@@ -1,19 +1,19 @@
 <template>
   <el-form label-position="right" label-width="90px">
     <el-form-item label="最大连接数">
-      <el-input-number v-model="tcp.maxConnections" :min="0" label="最大连接数" />
+      <el-input v-model="tcp.max_connections" placeholder="0" />
     </el-form-item>
     <el-form-item label="超时时间">
-      <el-input v-model="tcp.connectTimeout" placeholder="30ms" />
+      <el-input v-model="tcp.connect_timeout" placeholder="30ms" />
     </el-form-item>
     <el-form-item label="探针">
-      <el-input-number v-model="tcp.tcpKeepalive.probes" :min="0" label="探针" />
+      <el-input v-model="tcp.tcp_keepalive.probes" placeholder="0" />
     </el-form-item>
     <el-form-item label="间隔">
-      <el-input v-model="tcp.tcpKeepalive.interval" placeholder="75s" />
+      <el-input v-model="tcp.tcp_keepalive.interval" placeholder="75s" />
     </el-form-item>
     <el-form-item label="时间">
-      <el-input v-model="tcp.tcpKeepalive.time" placeholder="9" />
+      <el-input v-model="tcp.tcp_keepalive.time" placeholder="9s" />
     </el-form-item>
   </el-form>
 </template>
@@ -31,9 +31,9 @@ export default {
   data() {
     return {
       tcp: {
-        maxConnections: '',
-        connectTimeout: '',
-        tcpKeepalive: {
+        max_connections: '',
+        connect_timeout: '',
+        tcp_keepalive: {
           time: '',
           interval: '',
           probes: ''

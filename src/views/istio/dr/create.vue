@@ -30,6 +30,15 @@
     </el-form>
     <el-card class="box-card card-top">
       <div slot="header" class="clearfix">
+        <span>子集</span>
+      </div>
+      <div>
+        <SUBSET v-for="(item,key) in subsets" :key="key" :subset.sync="item" />
+        <el-button @click="addSubsets">新增子集</el-button>
+      </div>
+    </el-card>
+    <el-card class="box-card card-top">
+      <div slot="header" class="clearfix">
         <span>负载策略</span>
       </div>
       <el-form label-position="right" label-width="80px" :model="form.spec">
@@ -111,7 +120,8 @@ export default {
     Simple: () => import('@/views/common/dr/Simple'),
     ConsistentHash: () => import('@/views/common/dr/ConsistentHash'),
     TCP: () => import('@/views/common/dr/pool/Tcp'),
-    HTTP: () => import('@/views/common/dr/pool/Http')
+    HTTP: () => import('@/views/common/dr/pool/Http'),
+    SUBSET: () => import('@/views/common/dr/subsets/subset')
   },
   data() {
     return {
@@ -126,7 +136,8 @@ export default {
             loadBalancer: {},
             connectionPool: {},
             outlierDetection: {}
-          }
+          },
+          subsets: []
         }
       },
       namespaceData: [],
@@ -151,14 +162,26 @@ export default {
           label: '哈希负载'
         },
         {
-          localityLbSetting: {
-          },
+          localityLbSetting: {},
           hide: true,
           label: '部分负载'
         }
       ],
       poolType: '',
-      outlierDetection: {}
+      outlierDetection: {
+        consecutive_gateway_errors: '',
+        consecutive_5xx_errors: '',
+        base_ejection_time: '',
+        interval: '',
+        min_health_percent: '',
+        max_ejection_percent: ''
+      },
+      subsets: [],
+      subset: {
+        name: '',
+        labels: {},
+        traffic_policy: {}
+      }
     }
   },
   watch: {
@@ -171,6 +194,12 @@ export default {
           }
         }
         this.form.spec.trafficPolicy.outlierDetection = obj
+      },
+      deep: true
+    },
+    subsets: {
+      handler: function(newVal, oldVal) {
+        this.form.spec.subsets = newVal
       },
       deep: true
     }
@@ -197,16 +226,16 @@ export default {
         res.hide = true
       })
       this.trafficPolicy[this.trafficPolicyType].hide = false
+    },
+    addSubsets() {
+      this.subsets.push(this.subset)
     }
-    // poolChange() {
-    //   this.form.spec.trafficPolicy.connectionPool[this.poolType] = {}
-    // }
   }
 }
 </script>
 
 <style scoped>
-  .card-top{
-    margin: 10px 0;
-  }
+.card-top {
+  margin: 10px 0;
+}
 </style>

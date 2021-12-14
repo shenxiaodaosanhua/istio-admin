@@ -81,9 +81,9 @@ export default {
       this.myLb[this.value] = this.lb
     },
     unParseObject() {
-      for (const key in this.myLb) {
-        console.log('----', key)
-      }
+      // for (const key in this.myLb) {
+      //   console.log('----', key)
+      // }
     },
     updateObj(value) {
       this.lb = value

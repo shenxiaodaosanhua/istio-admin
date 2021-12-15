@@ -5,6 +5,22 @@
         <el-input v-model="subset.name" />
       </el-form-item>
     </el-form>
+    <el-form :inline="true" label-width="80px">
+      <div v-for="(item,index) in labels" :key="index">
+        <el-form-item label="key">
+          <el-input v-model="item.key" placeholder="请输入key" />
+        </el-form-item>
+        <el-form-item label="value">
+          <el-input v-model="item.value" placeholder="请输入value" />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click.prevent="removeDomain(item)">删除</el-button>
+        </el-form-item>
+      </div>
+      <el-form-item>
+        <el-button @click="addLabel">新增标签</el-button>
+      </el-form-item>
+    </el-form>
     <el-form label-position="right" label-width="80px">
       <el-form-item label="负载策略">
         <el-radio-group v-model="trafficPolicyType" @change="trafficPolicyChange">
@@ -17,16 +33,16 @@
           </el-radio>
         </el-radio-group>
       </el-form-item>
-      <Simple v-if="! trafficPolicy[0].hide" :data.sync="subset.traffic_policy.loadBalancer" />
-      <ConsistentHash v-if="! trafficPolicy[1].hide" :data.sync="subset.traffic_policy.loadBalancer" />
+      <Simple v-if="! trafficPolicy[0].hide" :data.sync="subset.traffic_policy.load_balancer" />
+      <ConsistentHash v-if="! trafficPolicy[1].hide" :data.sync="subset.traffic_policy.load_balancer" />
       <el-form-item label="连接池协议">
         <el-radio-group v-model="poolType">
           <el-radio label="tcp">TCP</el-radio>
           <el-radio label="http">HTTP</el-radio>
         </el-radio-group>
       </el-form-item>
-      <TCP v-if="poolType === 'tcp'" :data.sync="subset.traffic_policy.connectionPool" />
-      <HTTP v-if="poolType === 'http'" :data.sync="subset.traffic_policy.connectionPool" />
+      <TCP v-if="poolType === 'tcp'" :data.sync="subset.traffic_policy.connection_pool" />
+      <HTTP v-if="poolType === 'http'" :data.sync="subset.traffic_policy.connection_pool" />
     </el-form>
     <el-divider />
     <el-form label-position="right" label-width="130px" :model="outlierDetection">
@@ -66,10 +82,10 @@ export default {
       default: () => {
         return {
           name: '',
-          labels: '',
+          labels: {},
           traffic_policy: {
-            loadBalancer: {},
-            connectionPool: {},
+            load_balancer: {},
+            connection_pool: {},
             outlier_detection: {}
           }
         }
@@ -106,7 +122,9 @@ export default {
         interval: '',
         min_health_percent: '',
         max_ejection_percent: ''
-      }
+      },
+      labels: [],
+      label: {}
     }
   },
   watch: {
@@ -121,6 +139,17 @@ export default {
         this.subset.traffic_policy.outlier_detection = obj
       },
       deep: true
+    },
+    labels: {
+      handler: function(newVal, oldVal) {
+        for (let i = 0; i < newVal.length; i++) {
+          const item = newVal[i]
+          if (item.key !== undefined && item.value !== undefined && item.key !== '' && item.value !== '') {
+            this.subset.labels[item.key] = item.value
+          }
+        }
+      },
+      deep: true
     }
   },
   methods: {
@@ -129,6 +158,15 @@ export default {
         res.hide = true
       })
       this.trafficPolicy[this.trafficPolicyType].hide = false
+    },
+    addLabel() {
+      this.labels.push({})
+    },
+    removeDomain(item) {
+      const index = this.labels.indexOf(item)
+      if (index !== -1) {
+        this.labels.splice(index, 1)
+      }
     }
   }
 }

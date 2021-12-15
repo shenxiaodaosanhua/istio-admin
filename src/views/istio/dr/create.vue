@@ -17,7 +17,7 @@
       <el-form-item label="服务">
         <el-select v-model="form.spec.host" placeholder="请选择服务">
           <el-option
-            v-for="item in svcs"
+            v-for="item in services"
             :key="item.$index"
             :label="item.metadata.name"
             :value="item.metadata.name + '.' + item.metadata.namespace + '.svc.cluster.local'"
@@ -28,15 +28,18 @@
         </el-select>
       </el-form-item>
     </el-form>
-    <el-card class="box-card card-top">
+    <el-card v-for="(item,key) in subsets" :key="key" class="box-card card-top">
       <div slot="header" class="clearfix">
         <span>子集</span>
       </div>
       <div>
-        <SUBSET v-for="(item,key) in subsets" :key="key" :subset.sync="item" />
-        <el-button @click="addSubsets">新增子集</el-button>
+        <SUBSET :subset.sync="item" />
+        <el-button @click.prevent="removeDomain(item)">删除</el-button>
       </div>
     </el-card>
+    <el-container>
+      <el-button @click="addSubsets">新增子集</el-button>
+    </el-container>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="6">
         <div class="grid-content bg-purple">
@@ -72,7 +75,7 @@ export default {
         }
       },
       namespaceData: [],
-      svcs: [],
+      services: [],
       subsets: [],
       subset: {
         name: '',
@@ -106,7 +109,7 @@ export default {
       this.namespaceData = res.data
     })
     getSvcAll().then(res => {
-      this.svcs = res.data
+      this.services = res.data
     })
   },
   methods: {
@@ -120,6 +123,12 @@ export default {
     },
     addSubsets() {
       this.subsets.push(this.subset)
+    },
+    removeDomain(item) {
+      const index = this.subsets.indexOf(item)
+      if (index !== -1) {
+        this.subsets.splice(index, 1)
+      }
     }
   }
 }

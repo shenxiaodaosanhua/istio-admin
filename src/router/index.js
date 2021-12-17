@@ -185,6 +185,13 @@ export const constantRoutes = [
         name: 'task-create',
         component: () => import('@/views/tekton/task/create'),
         meta: { title: '任务添加', icon: 'el-icon-s-help' }
+      },
+      {
+        path: '/tekton/task/update',
+        name: 'task-update',
+        hidden: true,
+        component: () => import('@/views/tekton/task/update'),
+        meta: { title: '任务编辑', icon: 'el-icon-s-help' }
       }
     ]
   },

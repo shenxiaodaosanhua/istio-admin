@@ -108,6 +108,17 @@ export default {
       deep: true
     }
   },
+  created() {
+    if (this.step.command) {
+      this.commands = this.step.command
+    }
+    if (this.step.args) {
+      this.args = this.step.args
+    }
+    if (this.step.env) {
+      this.envs = this.step.env
+    }
+  },
   methods: {
     removeDomain(item) {
       const index = this.commands.indexOf(item)

@@ -7,6 +7,21 @@ export function getTaskByNs(ns) {
   })
 }
 
+export function getTaskDetail(ns, name) {
+  return request({
+    url: '/v1/task/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
+export function updateTask(data) {
+  return request({
+    url: '/v1/task/' + data.metadata.namespace + '/' + data.metadata.name,
+    method: 'post',
+    data: data
+  })
+}
+
 export function createTask(data) {
   return request({
     url: '/v1/task',

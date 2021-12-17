@@ -27,7 +27,7 @@
     <el-form-item
       v-for="(item, index) in envs"
       :key="'env-' + index"
-      :label="'命令'+ (index+1)"
+      :label="'环境变量'+ (index+1)"
     >
       <el-input v-model="item.name" />
       <el-input v-model="item.value" />

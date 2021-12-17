@@ -167,6 +167,27 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/tekton/task',
+    component: Layout,
+    redirect: '/tekton/task/index',
+    name: 'Tekton管理',
+    meta: { title: 'Tekton管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '/tekton/task/index',
+        name: 'task-index',
+        component: () => import('@/views/tekton/task/index'),
+        meta: { title: '任务列表', icon: 'el-icon-s-help' }
+      },
+      {
+        path: '/tekton/task/create',
+        name: 'task-create',
+        component: () => import('@/views/tekton/task/create'),
+        meta: { title: '任务添加', icon: 'el-icon-s-help' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

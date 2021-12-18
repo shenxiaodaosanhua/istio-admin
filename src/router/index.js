@@ -59,20 +59,20 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/ingress/index',
     name: 'ingress管理',
-    meta: { title: 'ingress管理', icon: 'el-icon-s-help' },
+    meta: { title: 'ingress管理', icon: 'el-icon-sort' },
     children: [
       {
         path: '/ingress/index',
         name: 'ingress-index',
         component: () => import('@/views/ingress/index'),
-        meta: { title: 'ingress列表', icon: 'el-icon-s-help' }
+        meta: { title: 'ingress列表', icon: 'el-icon-sort' }
       },
       {
         path: '/ingress/detail',
         name: 'ingress-detail',
         hidden: true,
         component: () => import('@/views/ingress/detail'),
-        meta: { title: 'ingress详情', icon: 'el-icon-s-help' }
+        meta: { title: 'ingress详情', icon: 'el-icon-sort' }
       }
     ]
   },
@@ -81,26 +81,26 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/vs/index',
     name: '虚拟服务管理',
-    meta: { title: '虚拟服务管理', icon: 'el-icon-s-help' },
+    meta: { title: '虚拟服务管理', icon: 'el-icon-s-grid' },
     children: [
       {
         path: '/vs/index',
         name: 'vs-index',
         component: () => import('@/views/istio/vs/index'),
-        meta: { title: '虚拟服务列表', icon: 'el-icon-s-help' }
+        meta: { title: '虚拟服务列表', icon: 'el-icon-s-grid' }
       },
       {
         path: '/vs/detail',
         name: 'vs-detail',
         hidden: true,
         component: () => import('@/views/istio/vs/detail'),
-        meta: { title: '虚拟服务详情', icon: 'table' }
+        meta: { title: '虚拟服务详情', icon: 'el-icon-s-grid' }
       },
       {
         path: '/vs/create',
         name: 'vs-create',
         component: () => import('@/views/istio/vs/create'),
-        meta: { title: '创建虚拟服务', icon: 'el-icon-s-help' }
+        meta: { title: '创建虚拟服务', icon: 'el-icon-s-grid' }
       }
     ]
   },
@@ -109,26 +109,26 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/dr/index',
     name: '路由规则管理',
-    meta: { title: '路由规则管理', icon: 'el-icon-s-help' },
+    meta: { title: '路由规则管理', icon: 'el-icon-s-unfold' },
     children: [
       {
         path: '/dr/index',
         name: 'dr-index',
         component: () => import('@/views/istio/dr/index'),
-        meta: { title: '路由规则列表', icon: 'el-icon-s-help' }
+        meta: { title: '路由规则列表', icon: 'el-icon-s-unfold' }
       },
       {
         path: '/dr/detail',
         name: 'dr-detail',
         hidden: true,
         component: () => import('@/views/istio/dr/detail'),
-        meta: { title: '路由规则详情', icon: 'el-icon-s-help' }
+        meta: { title: '路由规则详情', icon: 'el-icon-s-unfold' }
       },
       {
         path: '/dr/create',
         name: 'dr-create',
         component: () => import('@/views/istio/dr/create'),
-        meta: { title: '新增路由规则', icon: 'el-icon-s-help' }
+        meta: { title: '新增路由规则', icon: 'el-icon-s-unfold' }
       }
     ]
   },
@@ -137,33 +137,33 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/gw/index',
     name: '网关管理',
-    meta: { title: '网关管理', icon: 'el-icon-s-help' },
+    meta: { title: '网关管理', icon: 'el-icon-download' },
     children: [
       {
         path: '/gw/index',
         name: 'gw-index',
         component: () => import('@/views/istio/gw/index'),
-        meta: { title: '网关服务', icon: 'table' }
+        meta: { title: '网关服务', icon: 'el-icon-download' }
       },
       {
         path: '/gw/create',
         name: 'gw-create',
         component: () => import('@/views/istio/gw/create'),
-        meta: { title: '创建网关', icon: 'table' }
+        meta: { title: '创建网关', icon: 'el-icon-download' }
       },
       {
         path: '/gw/update',
         name: 'gw-update',
         hidden: true,
         component: () => import('@/views/istio/gw/update'),
-        meta: { title: '编辑网关', icon: 'table' }
+        meta: { title: '编辑网关', icon: 'el-icon-download' }
       },
       {
         path: '/gw/detail',
         name: 'gw-detail',
         hidden: true,
         component: () => import('@/views/istio/gw/detail'),
-        meta: { title: '网关详情', icon: 'table' }
+        meta: { title: '网关详情', icon: 'el-icon-download' }
       }
     ]
   },
@@ -172,26 +172,26 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/tekton/task/index',
     name: 'Task管理',
-    meta: { title: 'Task管理', icon: 'el-icon-s-help' },
+    meta: { title: 'Task管理', icon: 'el-icon-s-claim' },
     children: [
       {
         path: '/tekton/task/index',
         name: 'task-index',
         component: () => import('@/views/tekton/task/index'),
-        meta: { title: '任务列表', icon: 'el-icon-s-help' }
+        meta: { title: '任务列表', icon: 'el-icon-s-claim' }
       },
       {
         path: '/tekton/task/create',
         name: 'task-create',
         component: () => import('@/views/tekton/task/create'),
-        meta: { title: '任务添加', icon: 'el-icon-s-help' }
+        meta: { title: '任务添加', icon: 'el-icon-s-claim' }
       },
       {
         path: '/tekton/task/update',
         name: 'task-update',
         hidden: true,
         component: () => import('@/views/tekton/task/update'),
-        meta: { title: '任务编辑', icon: 'el-icon-s-help' }
+        meta: { title: '任务编辑', icon: 'el-icon-s-claim' }
       }
     ]
   },
@@ -200,19 +200,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/tekton/pipeline/index',
     name: 'Pipeline管理',
-    meta: { title: 'Pipeline管理', icon: 'el-icon-s-help' },
+    meta: { title: 'Pipeline管理', icon: 'el-icon-s-cooperation' },
     children: [
       {
         path: '/tekton/pipeline/index',
         name: 'pipeline-index',
         component: () => import('@/views/tekton/pipeline/index'),
-        meta: { title: 'pipeline列表', icon: 'el-icon-s-help' }
+        meta: { title: 'pipeline列表', icon: 'el-icon-s-cooperation' }
       },
       {
         path: '/tekton/pipeline/create',
         name: 'pipeline-create',
         component: () => import('@/views/tekton/pipeline/create'),
-        meta: { title: '添加pipeline', icon: 'el-icon-s-help' }
+        meta: { title: '添加pipeline', icon: 'el-icon-s-cooperation' }
       }
       // {
       //   path: '/tekton/task/update',

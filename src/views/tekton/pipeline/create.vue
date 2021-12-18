@@ -73,6 +73,7 @@ export default {
       createPipeline(this.form).then(res => {
         if (res.data === 'ok') {
           this.$message.success('添加成功')
+          this.$router.replace('/tekton/pipeline/index')
         }
       })
     },
@@ -83,7 +84,7 @@ export default {
       }
     },
     addTask() {
-      // this.disabled = true
+      this.disabled = true
       this.form.spec.tasks.push({})
     }
   }

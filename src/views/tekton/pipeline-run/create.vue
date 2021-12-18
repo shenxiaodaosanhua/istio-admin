@@ -1,8 +1,8 @@
 <template>
   <el-main>
-    <el-form label-position="right" label-width="80px" :model="form">
+    <el-form label-position="right" label-width="100px" :model="form">
       <el-form-item label="命名空间">
-        <el-select v-model="form.metadata.namespace" :disabled="disabled" placeholder="请选择命名空间">
+        <el-select v-model="form.metadata.namespace" placeholder="请选择命名空间" @change="getPipelines">
           <el-option
             v-for="item in namespaceData"
             :key="item.name"
@@ -15,7 +15,14 @@
         <el-input v-model="form.metadata.name" />
       </el-form-item>
       <el-form-item label="选择流水线">
-        <el-input v-model="form.spec.pipelineRef.name" />
+        <el-select v-model="form.spec.pipelineRef.name" placeholder="请选择流水线">
+          <el-option
+            v-for="item in pipelines"
+            :key="item.metadata.name"
+            :label="item.metadata.name"
+            :value="item.metadata.name"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <el-row type="flex" class="row-bg" justify="center">
@@ -33,7 +40,7 @@
 
 <script>
 import { getNsAll } from '@/api/ns'
-import { createPipelineRun } from '@/api/tekton'
+import { createPipelineRun, getPipelineByNs } from '@/api/tekton'
 
 export default {
   data() {
@@ -50,12 +57,15 @@ export default {
         }
       },
       namespaceData: [],
-      disabled: false
+      pipelines: []
     }
   },
   created() {
     getNsAll().then(res => {
       this.namespaceData = res.data
+    })
+    getPipelineByNs(this.form.metadata.namespace).then(res => {
+      this.pipelines = res.data
     })
   },
   methods: {
@@ -67,15 +77,10 @@ export default {
         }
       })
     },
-    removeDomain(item) {
-      const index = this.form.spec.tasks.indexOf(item)
-      if (index !== -1) {
-        this.form.spec.tasks.splice(index, 1)
-      }
-    },
-    addTask() {
-      this.disabled = true
-      this.form.spec.tasks.push({})
+    getPipelines() {
+      getPipelineByNs(this.form.metadata.namespace).then(res => {
+        this.pipelines = res.data
+      })
     }
   }
 }

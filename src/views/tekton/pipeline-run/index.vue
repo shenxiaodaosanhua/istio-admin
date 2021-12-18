@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'pipeline-create'}">新增PipelineRun</router-link>
+          <router-link :to="{name: 'pipeline-run-create'}">新增PipelineRun</router-link>
         </el-col>
       </el-row>
     </el-header>

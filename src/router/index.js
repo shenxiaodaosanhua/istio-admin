@@ -183,6 +183,7 @@ export const constantRoutes = [
       {
         path: '/tekton/task/create',
         name: 'task-create',
+        hidden: true,
         component: () => import('@/views/tekton/task/create'),
         meta: { title: '任务添加', icon: 'el-icon-s-claim' }
       },
@@ -192,63 +193,47 @@ export const constantRoutes = [
         hidden: true,
         component: () => import('@/views/tekton/task/update'),
         meta: { title: '任务编辑', icon: 'el-icon-s-claim' }
-      }
-    ]
-  },
-  {
-    path: '/tekton/pipeline',
-    component: Layout,
-    redirect: '/tekton/pipeline/index',
-    name: 'Pipeline管理',
-    meta: { title: 'Pipeline管理', icon: 'el-icon-s-cooperation' },
-    children: [
+      },
       {
         path: '/tekton/pipeline/index',
         name: 'pipeline-index',
         component: () => import('@/views/tekton/pipeline/index'),
-        meta: { title: 'pipeline列表', icon: 'el-icon-s-cooperation' }
+        meta: { title: '流水线列表', icon: 'el-icon-s-cooperation' }
       },
       {
         path: '/tekton/pipeline/create',
         name: 'pipeline-create',
+        hidden: true,
         component: () => import('@/views/tekton/pipeline/create'),
-        meta: { title: '添加pipeline', icon: 'el-icon-s-cooperation' }
+        meta: { title: '添加流水线', icon: 'el-icon-s-cooperation' }
       },
       {
         path: '/tekton/pipeline/update',
         name: 'pipeline-update',
         hidden: true,
         component: () => import('@/views/tekton/pipeline/update'),
-        meta: { title: '任务编辑', icon: 'el-icon-s-help' }
-      }
-    ]
-  },
-  {
-    path: '/tekton/pipeline-run',
-    component: Layout,
-    redirect: '/tekton/pipeline-run/index',
-    name: 'PipelineRun管理',
-    meta: { title: 'pipeline-run管理', icon: 'el-icon-s-cooperation' },
-    children: [
+        meta: { title: '流水线编辑', icon: 'el-icon-s-help' }
+      },
       {
         path: '/tekton/pipeline-run/index',
         name: 'pipeline-run-index',
         component: () => import('@/views/tekton/pipeline-run/index'),
-        meta: { title: 'pipeline-run列表', icon: 'el-icon-s-cooperation' }
+        meta: { title: '流水线运行时列表', icon: 'el-icon-s-cooperation' }
       },
       {
         path: '/tekton/pipeline-run/create',
         name: 'pipeline-run-create',
+        hidden: true,
         component: () => import('@/views/tekton/pipeline-run/create'),
-        meta: { title: '添加pipeline-run', icon: 'el-icon-s-cooperation' }
+        meta: { title: '添加流水线运行时', icon: 'el-icon-s-cooperation' }
+      },
+      {
+        path: '/tekton/pipeline-run/update',
+        name: 'pipeline-run-update',
+        hidden: true,
+        component: () => import('@/views/tekton/pipeline-run/update'),
+        meta: { title: '流水线运行时编辑', icon: 'el-icon-s-help' }
       }
-      // {
-      //   path: '/tekton/pipeline-run/update',
-      //   name: 'pipeline-run-update',
-      //   hidden: true,
-      //   component: () => import('@/views/tekton/pipeline-run/update'),
-      //   meta: { title: '任务编辑', icon: 'el-icon-s-help' }
-      // }
     ]
   },
   // 404 page must be placed at the end !!!

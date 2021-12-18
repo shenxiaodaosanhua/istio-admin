@@ -88,3 +88,10 @@ export function createPipelineRun(data) {
     data: data
   })
 }
+
+export function deletePipelineRun(ns, name) {
+  return request({
+    url: '/v1/pipeline-run/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

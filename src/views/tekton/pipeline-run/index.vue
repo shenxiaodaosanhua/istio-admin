@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'pipeline-run-create'}">新增PipelineRun</router-link>
+          <router-link :to="{name: 'pipeline-run-create'}">新增流水线运行时</router-link>
         </el-col>
       </el-row>
     </el-header>
@@ -42,7 +42,26 @@
         </el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
-            <p>{{ scope.row.metadata.creationTimestamp }}</p>
+            <p>{{ formatDate(scope.row.metadata.creationTimestamp, 'YYYY-MM-DD HH:mm:ss') }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="运行时间" align="center">
+          <template slot-scope="scope">
+            <p>
+              {{ formatDate(scope.row.status.startTime, 'YYYY-MM-DD HH:mm:ss') }}
+              -
+              {{ formatDate(scope.row.status.completionTime, 'YYYY-MM-DD HH:mm:ss') }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="运行状态" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="runType(scope.row.status.conditions)">
+              {{ scope.row.status.conditions[0].reason }}
+            </el-tag>
+            <p v-show="showStatusMessage(scope.row.status.conditions)">
+              {{ scope.row.status.conditions[0].message }}
+            </p>
           </template>
         </el-table-column>
         <el-table-column
@@ -71,8 +90,9 @@
 
 <script>
 import { getNsAll } from '@/api/ns'
-import { deletePipeline, getPipelineRunByNs } from '@/api/tekton'
+import { deletePipelineRun, getPipelineRunByNs } from '@/api/tekton'
 import { NewClient } from '@/utils/ws'
+import { formatDate } from '@/utils/helper'
 
 export default {
   data() {
@@ -80,7 +100,8 @@ export default {
       namespaceData: [],
       defaultValue: 'default',
       wsClient: null,
-      pipelineRuns: []
+      pipelineRuns: [],
+      formatDate
     }
   },
   created() {
@@ -113,7 +134,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deletePipeline(row.metadata.namespace, row.metadata.name).then(res => {
+        deletePipelineRun(row.metadata.namespace, row.metadata.name).then(res => {
           if (res.data === 'ok') {
             this.$message({
               type: 'success',
@@ -132,6 +153,32 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    runType(conditions) {
+      if (conditions.length === 0) {
+        return 'danger'
+      }
+
+      switch (conditions[0].status) {
+        case 'True':
+          return 'success'
+        case 'False':
+          return 'danger'
+        default:
+          return 'info'
+      }
+    },
+    showStatusMessage(conditions) {
+      if (conditions.length === 0) {
+        return false
+      }
+      switch (conditions[0].status) {
+        case 'True':
+          return false
+        case 'False':
+          return true
+      }
+      return true
     }
   }
 }

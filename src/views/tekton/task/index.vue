@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="5">
-          <router-link :to="{name: 'task-create'}">新增规则</router-link>
+          <router-link :to="{name: 'task-create'}">新增任务</router-link>
         </el-col>
       </el-row>
     </el-header>
@@ -42,7 +42,7 @@
         </el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
-            <p>{{ scope.row.metadata.creationTimestamp }}</p>
+            <p>{{ formatDate(scope.row.metadata.creationTimestamp, 'YYYY-MM-DD HH:mm:ss') }}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -73,6 +73,7 @@
 import { getNsAll } from '@/api/ns'
 import { NewClient } from '@/utils/ws'
 import { deleteTask, getTaskByNs } from '@/api/tekton'
+import { formatDate } from '@/utils/helper'
 
 export default {
   data() {
@@ -80,7 +81,8 @@ export default {
       namespaceData: [],
       defaultValue: 'default',
       tasks: [],
-      wsClient: null
+      wsClient: null,
+      formatDate
     }
   },
   created() {

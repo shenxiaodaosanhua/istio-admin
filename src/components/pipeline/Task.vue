@@ -58,8 +58,8 @@ export default {
     },
     namespace: {
       handler: function(newVal, oldVal) {
-        this.taskRef.name = ''
-        getTaskByNs(this.namespace).then(res => {
+        this.$set(this.taskRef, 'name', '')
+        getTaskByNs(newVal).then(res => {
           this.tasks = res.data
         })
         this.$forceUpdate()

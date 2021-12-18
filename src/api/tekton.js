@@ -36,3 +36,25 @@ export function deleteTask(ns, name) {
     method: 'delete'
   })
 }
+
+export function getPipelineByNs(ns) {
+  return request({
+    url: '/v1/pipeline?ns=' + ns,
+    method: 'get'
+  })
+}
+
+export function createPipeline(data) {
+  return request({
+    url: '/v1/pipeline',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deletePipeline(ns, name) {
+  return request({
+    url: '/v1/pipeline/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

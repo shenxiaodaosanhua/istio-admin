@@ -171,8 +171,8 @@ export const constantRoutes = [
     path: '/tekton/task',
     component: Layout,
     redirect: '/tekton/task/index',
-    name: 'Tekton管理',
-    meta: { title: 'Tekton管理', icon: 'el-icon-s-help' },
+    name: 'Task管理',
+    meta: { title: 'Task管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: '/tekton/task/index',
@@ -193,6 +193,34 @@ export const constantRoutes = [
         component: () => import('@/views/tekton/task/update'),
         meta: { title: '任务编辑', icon: 'el-icon-s-help' }
       }
+    ]
+  },
+  {
+    path: '/tekton/pipeline',
+    component: Layout,
+    redirect: '/tekton/pipeline/index',
+    name: 'Pipeline管理',
+    meta: { title: 'Pipeline管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '/tekton/pipeline/index',
+        name: 'pipeline-index',
+        component: () => import('@/views/tekton/pipeline/index'),
+        meta: { title: 'pipeline列表', icon: 'el-icon-s-help' }
+      },
+      {
+        path: '/tekton/pipeline/create',
+        name: 'pipeline-create',
+        component: () => import('@/views/tekton/pipeline/create'),
+        meta: { title: '添加pipeline', icon: 'el-icon-s-help' }
+      }
+      // {
+      //   path: '/tekton/task/update',
+      //   name: 'task-update',
+      //   hidden: true,
+      //   component: () => import('@/views/tekton/task/update'),
+      //   meta: { title: '任务编辑', icon: 'el-icon-s-help' }
+      // }
     ]
   },
   // 404 page must be placed at the end !!!

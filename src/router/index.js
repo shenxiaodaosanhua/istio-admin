@@ -223,6 +223,34 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/tekton/pipeline-run',
+    component: Layout,
+    redirect: '/tekton/pipeline-run/index',
+    name: 'PipelineRun管理',
+    meta: { title: 'pipeline-run管理', icon: 'el-icon-s-cooperation' },
+    children: [
+      {
+        path: '/tekton/pipeline-run/index',
+        name: 'pipeline-run-index',
+        component: () => import('@/views/tekton/pipeline-run/index'),
+        meta: { title: 'pipeline-run列表', icon: 'el-icon-s-cooperation' }
+      },
+      {
+        path: '/tekton/pipeline-run/create',
+        name: 'pipeline-run-create',
+        component: () => import('@/views/tekton/pipeline-run/create'),
+        meta: { title: '添加pipeline-run', icon: 'el-icon-s-cooperation' }
+      }
+      // {
+      //   path: '/tekton/pipeline-run/update',
+      //   name: 'pipeline-run-update',
+      //   hidden: true,
+      //   component: () => import('@/views/tekton/pipeline-run/update'),
+      //   meta: { title: '任务编辑', icon: 'el-icon-s-help' }
+      // }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

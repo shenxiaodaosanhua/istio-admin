@@ -73,3 +73,18 @@ export function updatePipeline(data) {
     data: data
   })
 }
+
+export function getPipelineRunByNs(ns) {
+  return request({
+    url: '/v1/pipeline-run?ns=' + ns,
+    method: 'get'
+  })
+}
+
+export function createPipelineRun(data) {
+  return request({
+    url: '/v1/pipeline-run',
+    method: 'post',
+    data: data
+  })
+}

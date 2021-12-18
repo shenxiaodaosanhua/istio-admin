@@ -2,7 +2,7 @@
   <el-main>
     <el-form label-position="right" label-width="80px" :model="form">
       <el-form-item label="命名空间">
-        <el-select v-model="form.metadata.namespace" placeholder="请选择命名空间">
+        <el-select v-model="form.metadata.namespace" :disabled="disabled" placeholder="请选择命名空间">
           <el-option
             v-for="item in namespaceData"
             :key="item.name"
@@ -20,7 +20,7 @@
         <span>任务{{ index+1 }}</span>
       </div>
       <div>
-        <TASK :task.sync="item" />
+        <TASK :namespace.sync="form.metadata.namespace" :task.sync="item" />
         <el-button type="danger" @click.prevent="removeDomain(item)">删除</el-button>
       </div>
     </el-card>
@@ -52,14 +52,15 @@ export default {
     return {
       form: {
         metadata: {
-          namespace: '',
+          namespace: 'default',
           name: ''
         },
         spec: {
           tasks: []
         }
       },
-      namespaceData: []
+      namespaceData: [],
+      disabled: false
     }
   },
   created() {
@@ -69,7 +70,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.form)
       createPipeline(this.form).then(res => {
         if (res.data === 'ok') {
           this.$message.success('添加成功')
@@ -83,6 +83,7 @@ export default {
       }
     },
     addTask() {
+      // this.disabled = true
       this.form.spec.tasks.push({})
     }
   }

@@ -4,12 +4,21 @@
       <el-input v-model="task.name" />
     </el-form-item>
     <el-form-item label="任务引用名称">
-      <el-input v-model="taskRef.name" />
+      <el-select v-model="taskRef.name" placeholder="请选择任务">
+        <el-option
+          v-for="item in tasks"
+          :key="item.metadata.name"
+          :label="item.metadata.name"
+          :value="item.metadata.name"
+        />
+      </el-select>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import { getTaskByNs } from '@/api/tekton'
+
 export default {
   props: {
     task: {
@@ -20,11 +29,18 @@ export default {
           taskRef: {}
         }
       }
+    },
+    namespace: {
+      type: String,
+      default() {
+        return ''
+      }
     }
   },
   data() {
     return {
-      taskRef: {}
+      taskRef: {},
+      tasks: []
     }
   },
   watch: {
@@ -39,6 +55,23 @@ export default {
         this.$set(this.task, 'taskRef', obj)
       },
       deep: true
+    },
+    namespace: {
+      handler: function(newVal, oldVal) {
+        this.taskRef.name = ''
+        getTaskByNs(this.namespace).then(res => {
+          this.tasks = res.data
+        })
+        this.$forceUpdate()
+      },
+      deep: true
+    }
+  },
+  created() {
+    if (this.namespace !== '') {
+      getTaskByNs(this.namespace).then(res => {
+        this.tasks = res.data
+      })
     }
   }
 }

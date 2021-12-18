@@ -70,7 +70,8 @@ export default {
     return {
       commands: [],
       args: [],
-      envs: []
+      envs: [],
+      tasks: []
     }
   },
   watch: {
@@ -80,8 +81,7 @@ export default {
         for (const key in newVal) {
           arr[key] = newVal[key]
         }
-        this.step.command = arr
-        this.$forceUpdate()
+        this.$set(this.step, 'command', arr)
       },
       deep: true
     },
@@ -91,8 +91,7 @@ export default {
         for (const key in newVal) {
           arr[key] = newVal[key]
         }
-        this.step.args = arr
-        this.$forceUpdate()
+        this.$set(this.step, 'args', arr)
       },
       deep: true
     },
@@ -102,8 +101,7 @@ export default {
         for (const key in newVal) {
           arr[key] = newVal[key]
         }
-        this.step.env = arr
-        this.$forceUpdate()
+        this.$set(this.step, 'env', arr)
       },
       deep: true
     }

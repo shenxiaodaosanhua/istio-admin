@@ -213,14 +213,14 @@ export const constantRoutes = [
         name: 'pipeline-create',
         component: () => import('@/views/tekton/pipeline/create'),
         meta: { title: '添加pipeline', icon: 'el-icon-s-cooperation' }
+      },
+      {
+        path: '/tekton/pipeline/update',
+        name: 'pipeline-update',
+        hidden: true,
+        component: () => import('@/views/tekton/pipeline/update'),
+        meta: { title: '任务编辑', icon: 'el-icon-s-help' }
       }
-      // {
-      //   path: '/tekton/task/update',
-      //   name: 'task-update',
-      //   hidden: true,
-      //   component: () => import('@/views/tekton/task/update'),
-      //   meta: { title: '任务编辑', icon: 'el-icon-s-help' }
-      // }
     ]
   },
   // 404 page must be placed at the end !!!

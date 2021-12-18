@@ -57,7 +57,7 @@
             </el-button>
             <el-button type="text" size="small">
               <router-link
-                :to="{name:'task-update', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
+                :to="{name:'pipeline-update', params: {ns:scope.row.metadata.namespace, name: scope.row.metadata.name}}"
               >编辑
               </router-link>
             </el-button>

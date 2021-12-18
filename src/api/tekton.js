@@ -52,9 +52,24 @@ export function createPipeline(data) {
   })
 }
 
+export function getPipelineDetail(ns, name) {
+  return request({
+    url: '/v1/pipeline/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
 export function deletePipeline(ns, name) {
   return request({
     url: '/v1/pipeline/' + ns + '/' + name,
     method: 'delete'
+  })
+}
+
+export function updatePipeline(data) {
+  return request({
+    url: '/v1/pipeline/' + data.metadata.namespace + '/' + data.metadata.name,
+    method: 'post',
+    data: data
   })
 }

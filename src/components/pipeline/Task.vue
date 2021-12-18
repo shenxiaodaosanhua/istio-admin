@@ -73,6 +73,9 @@ export default {
         this.tasks = res.data
       })
     }
+    if (this.task.taskRef.name !== '') {
+      this.taskRef.name = this.task.taskRef.name
+    }
   }
 }
 </script>
